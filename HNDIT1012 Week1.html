@@ -1,0 +1,1023 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>HNDIT1012 Week 1 Lab</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a teaching workbench — stop list on the left, one hands-on stop on the stage; the form designer mimics a real IDE with toolbox, design surface, properties and error list. */
+:root{
+  --paper:#EEF3F2; --panel:#FFFFFF; --ink:#13231F; --muted:#526661; --line:#D3DFDC;
+  --accent:#0B7A73; --accent-ink:#FFFFFF; --accent-soft:#DDF1EE;
+  --hi:#E09A1A; --hi-soft:#FFF1D1; --ok:#18804E; --ok-soft:#DDF3E6; --bad:#BD3A2F; --bad-soft:#FBE2DE;
+  --code-bg:#0E1B1A; --code-ink:#DCE8E5; --code-dim:#7E9792; --code-on:#28391C;
+  --tk:#7FB8FF; --ts:#F2C27B; --tn:#B9E58A; --tt:#6FD8C8; --tc:#7B9590;
+  --win:#F3F4F6; --win-ink:#1B1F24; --win-line:#A9B1BA; --win-title:#FFFFFF; --win-sel:#0B7A73;
+  --f-display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",Consolas,"Courier New",monospace;
+  --f-win:"Segoe UI",Tahoma,Arial,sans-serif;
+  --scale:1;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0C1514; --panel:#13201E; --ink:#E3EEEB; --muted:#93AAA5; --line:#243633;
+  --accent:#3FC2B6; --accent-ink:#06201D; --accent-soft:#143532;
+  --hi:#F0B240; --hi-soft:#3A2D10; --ok:#4CC38A; --ok-soft:#123326; --bad:#F0736A; --bad-soft:#3D1A17;
+  --code-bg:#08100F; --code-on:#28391C;
+  --win:#2A2F35; --win-ink:#E8EBEE; --win-line:#4B545E; --win-title:#1F2328; --win-sel:#3FC2B6; color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --paper:#0C1514; --panel:#13201E; --ink:#E3EEEB; --muted:#93AAA5; --line:#243633;
+  --accent:#3FC2B6; --accent-ink:#06201D; --accent-soft:#143532;
+  --hi:#F0B240; --hi-soft:#3A2D10; --ok:#4CC38A; --ok-soft:#123326; --bad:#F0736A; --bad-soft:#3D1A17;
+  --code-bg:#08100F; --code-on:#28391C;
+  --win:#2A2F35; --win-ink:#E8EBEE; --win-line:#4B545E; --win-title:#1F2328; --win-sel:#3FC2B6; color-scheme:dark;}
+
+html{font-size:calc(16px * var(--scale))}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:1rem;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--panel)}
+*{box-sizing:border-box}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.15;margin:0}
+p{margin:0;max-width:70ch}
+code,.mono{font-family:var(--f-mono);font-size:.92em}
+.muted{color:var(--muted)}
+
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--panel);border-bottom:1px solid var(--line);
+  padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.brand{display:flex;align-items:baseline;gap:10px;min-width:0;flex-wrap:wrap}
+.brand h1{font-size:1.25rem;font-weight:800;letter-spacing:-.01em}
+.brand .tag{font-family:var(--f-mono);font-size:.75rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.tools{margin-left:auto;display:flex;gap:6px}
+.progress{height:3px;background:var(--line);flex-basis:100%;border-radius:3px;position:relative;overflow:hidden}
+.progress i{position:absolute;inset:0 auto 0 0;background:var(--accent);transition:width .3s}
+
+.btn{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:6px 12px;cursor:pointer;line-height:1.3}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:700}
+.btn.small{padding:3px 9px;font-size:.85rem}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+
+.wrap{display:grid;grid-template-columns:240px minmax(0,1fr)}
+.rail{border-right:1px solid var(--line);background:var(--panel);padding:18px 12px 24px max(12px,env(safe-area-inset-left,0px))}
+.rail ol{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.rail a{display:flex;gap:10px;align-items:baseline;padding:7px 8px;border-radius:7px;color:var(--ink);text-decoration:none;font-size:.95rem}
+.rail a .n{font-family:var(--f-mono);font-size:.75rem;color:var(--muted);min-width:1.6em}
+.rail a:hover{background:var(--accent-soft)}
+.rail a[aria-current="true"]{background:var(--accent);color:var(--accent-ink)}
+.rail a[aria-current="true"] .n{color:var(--accent-ink)}
+.rail .slide{font-family:var(--f-mono);font-size:.68rem;color:var(--muted);margin-left:auto;white-space:nowrap}
+.rail a[aria-current="true"] .slide{color:var(--accent-ink)}
+.stage{padding-block:26px 40px;padding-left:max(16px,clamp(16px,3vw,40px));padding-right:max(16px,env(safe-area-inset-right,0px),clamp(16px,3vw,40px));min-width:0}
+.stop{display:grid;gap:20px;max-width:1180px}
+.eyebrow{font-family:var(--f-mono);font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.stop h2{font-size:clamp(1.7rem,3.2vw,2.5rem);font-weight:800;letter-spacing:-.02em;margin-top:4px}
+.lead{font-size:1.1rem;color:var(--muted);margin-top:8px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:start}
+.grid2>*{min-width:0}
+.stack{display:grid;gap:12px;grid-template-columns:minmax(0,1fr)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
+.card h3{font-size:1.08rem;margin-bottom:8px}
+.explain{border-left:4px solid var(--hi);background:var(--hi-soft);padding:12px 14px;border-radius:0 10px 10px 0;min-height:4.5em}
+.explain b{font-family:var(--f-display)}
+.pager{display:flex;justify-content:space-between;gap:10px;max-width:1180px;margin-top:6px;flex-wrap:wrap}
+.key{font-family:var(--f-mono);font-size:.75rem;border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 5px;color:var(--muted)}
+label.f{display:grid;gap:4px;font-size:.86rem;color:var(--muted)}
+input[type=text],input[type=number],select,textarea{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:7px 10px;width:100%;min-width:0}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:4px 12px;cursor:pointer;font-size:.88rem}
+.chip:hover{border-color:var(--accent)}
+.chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.pill{display:inline-block;border-radius:999px;padding:2px 10px;font-size:.8rem;font-weight:700;white-space:nowrap}
+.pill.ok{background:var(--ok-soft);color:var(--ok)} .pill.bad{background:var(--bad-soft);color:var(--bad)} .pill.hi{background:var(--hi-soft);color:var(--ink)}
+.toggle{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.toggle button{border:0;background:var(--panel);padding:6px 12px;cursor:pointer;font-size:.9rem}
+.toggle button[aria-pressed="true"]{background:var(--ink);color:var(--panel)}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:.92rem;font-variant-numeric:tabular-nums}
+th,td{padding:7px 12px;border-bottom:1px solid var(--line);text-align:left}
+th{font-family:var(--f-mono);font-size:.76rem;letter-spacing:.04em;color:var(--muted);background:var(--paper);font-weight:600}
+tr:last-child td{border-bottom:0}
+
+.code{background:var(--code-bg);color:var(--code-ink);border-radius:12px;font-family:var(--f-mono);font-size:.9rem;line-height:1.7;overflow-x:auto;padding:12px 0}
+.code .ln{display:block;padding:0 16px 0 0;white-space:pre;border-left:3px solid transparent}
+.code .ln::before{content:attr(data-n);display:inline-block;width:2.6em;padding-right:1em;text-align:right;color:var(--code-dim);opacity:.6}
+.code .ln.on{background:var(--code-on);border-left-color:var(--hi)}
+.code .ln.err{background:rgba(190,58,47,.28);border-left-color:var(--bad)}
+.k{color:var(--tk)} .s{color:var(--ts)} .nm{color:var(--tn)} .t{color:var(--tt)} .c{color:var(--tc);font-style:italic}
+.console{background:var(--code-bg);color:#E8F0E6;font-family:var(--f-mono);border-radius:10px;padding:12px 14px;min-height:3.2em;white-space:pre-wrap;font-size:.9rem;overflow-x:auto}
+
+/* --- stop 1 sorter --- */
+.sort{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.scard{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:12px;display:grid;gap:8px}
+.scard pre{margin:0;background:var(--code-bg);color:var(--code-ink);font-family:var(--f-mono);font-size:.8rem;padding:10px;border-radius:8px;overflow-x:auto;white-space:pre}
+.scard .lang{font-family:var(--f-mono);font-size:.72rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.scard.right{border-color:var(--ok);box-shadow:0 0 0 1px var(--ok)} .scard.wrong{border-color:var(--bad);box-shadow:0 0 0 1px var(--bad)}
+
+/* --- stop 2 translator --- */
+.xlate{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);gap:14px}
+.xlate>*{min-width:0}
+.fileshelf{display:flex;gap:8px;flex-wrap:wrap;min-height:40px;align-items:center}
+.file{font-family:var(--f-mono);font-size:.82rem;border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:var(--panel)}
+.file.exe{border-color:var(--accent);background:var(--accent-soft)}
+.log{font-family:var(--f-mono);font-size:.8rem;display:grid;gap:4px;max-height:260px;overflow:auto}
+.log div{padding:4px 8px;border-radius:6px;background:var(--paper)}
+.log .e{background:var(--bad-soft);color:var(--bad)}
+.counter{font-family:var(--f-display);font-size:2rem;font-weight:800}
+
+/* --- stop 3 architecture --- */
+.arch{display:grid;gap:8px}
+.layer{display:flex;gap:8px;flex-wrap:wrap}
+.blk{flex:1 1 120px;border:1px solid var(--line);border-radius:10px;background:var(--panel);padding:10px 12px;cursor:pointer;text-align:left;display:grid;gap:2px;align-content:start;transition:all .2s}
+.blk small{color:var(--muted);font-size:.78rem;line-height:1.3}
+.blk b{font-family:var(--f-display)}
+.blk:hover{border-color:var(--accent)}
+.blk.on{border-color:var(--hi);background:var(--hi-soft);box-shadow:0 0 0 2px var(--hi)}
+.blk.clr{background:var(--accent-soft)}
+.archgrid{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,1.3fr);gap:8px}
+.archgrid>*{min-width:0}
+.down{text-align:center;color:var(--muted);font-family:var(--f-mono);font-size:.8rem;line-height:1}
+
+/* --- stop 4 IDE --- */
+.ide{border:1px solid var(--win-line);border-radius:10px;overflow:hidden;background:var(--win);color:var(--win-ink);font-family:var(--f-win);font-size:.82rem;display:grid;
+  grid-template-columns:150px minmax(0,1fr) 190px;grid-template-rows:auto auto minmax(220px,1fr) 110px;min-width:640px}
+.ide-scroll{overflow-x:auto}
+.zone{border:1px solid var(--win-line);margin:-1px 0 0 -1px;padding:6px 8px;cursor:pointer;position:relative;background:var(--win-title)}
+.zone:hover{outline:2px solid var(--accent);outline-offset:-2px;z-index:1}
+.zone.on{outline:3px solid var(--hi);outline-offset:-3px;z-index:2}
+.zone.good{outline:3px solid var(--ok);outline-offset:-3px}
+.zone.badz{outline:3px solid var(--bad);outline-offset:-3px}
+.zone .zt{font-weight:600;font-size:.75rem;opacity:.75;margin-bottom:4px}
+.mini-item{padding:1px 4px;opacity:.85;white-space:nowrap}
+.mini-form{border:1px solid var(--win-line);background:var(--win);width:220px;height:130px;margin:10px auto;position:relative}
+.mini-form .bar{background:var(--win-title);border-bottom:1px solid var(--win-line);padding:2px 6px;font-size:.72rem}
+.ide-z-menu{grid-column:1/-1}.ide-z-tool{grid-column:1/-1}.ide-z-box{grid-row:3/5}.ide-z-ed{grid-column:2}.ide-z-sol{grid-column:3;grid-row:3}.ide-z-out{grid-column:2;grid-row:4}.ide-z-prop{grid-column:3;grid-row:4}
+.gameq{font-family:var(--f-display);font-size:1.25rem;font-weight:700}
+
+/* --- stop 5 checker --- */
+.req td:nth-child(3){font-family:var(--f-mono);font-size:.84rem;color:var(--muted)}
+.verdict{font-family:var(--f-display);font-size:1.6rem;font-weight:800}
+
+/* --- stop 6 designer --- */
+.vs{border:1px solid var(--win-line);border-radius:10px;overflow:hidden;background:var(--win);color:var(--win-ink);font-family:var(--f-win);font-size:.86rem}
+.vs-bar{display:flex;gap:8px;align-items:center;padding:6px 10px;background:var(--win-title);border-bottom:1px solid var(--win-line);flex-wrap:wrap}
+.vs-bar .proj{font-weight:700}
+.vs-start{background:var(--ok);color:#fff;border:0;border-radius:4px;padding:5px 12px;cursor:pointer;font-weight:700}
+.vs-start[disabled]{opacity:.5}
+.vs-body{display:grid;grid-template-columns:150px minmax(0,1fr) 230px;min-height:400px}
+.vs-body>*{min-width:0}
+.pane{border-right:1px solid var(--win-line);background:var(--win-title);display:flex;flex-direction:column}
+.pane:last-child{border-right:0;border-left:1px solid var(--win-line)}
+.pane h5{margin:0;padding:6px 10px;font-size:.75rem;font-weight:700;border-bottom:1px solid var(--win-line);letter-spacing:.02em}
+.tbx{display:grid;padding:6px;gap:2px}
+.tbx button{text-align:left;border:1px solid transparent;background:transparent;padding:5px 8px;border-radius:4px;cursor:pointer;display:flex;gap:8px;align-items:center;color:var(--win-ink)}
+.tbx button:hover{border-color:var(--win-sel)}
+.tbx .ic{font-family:var(--f-mono);font-size:.7rem;border:1px solid var(--win-line);border-radius:3px;padding:0 3px;min-width:2.4em;text-align:center}
+.doc-tabs{display:flex;border-bottom:1px solid var(--win-line);background:var(--win-title);overflow-x:auto}
+.doc-tabs button{border:0;border-right:1px solid var(--win-line);background:transparent;padding:6px 12px;cursor:pointer;white-space:nowrap;color:var(--win-ink)}
+.doc-tabs button[aria-selected="true"]{background:var(--win);font-weight:700;box-shadow:inset 0 -2px 0 var(--win-sel)}
+.surface-wrap{overflow:auto;padding:18px;background:repeating-linear-gradient(0deg,transparent 0 15px,rgba(127,127,127,.07) 15px 16px),repeating-linear-gradient(90deg,transparent 0 15px,rgba(127,127,127,.07) 15px 16px)}
+.wform{position:relative;width:460px;height:300px;background:var(--win);border:1px solid var(--win-line);box-shadow:0 6px 18px rgba(0,0,0,.12)}
+.wform .titlebar{height:28px;background:var(--win-title);border-bottom:1px solid var(--win-line);display:flex;align-items:center;justify-content:space-between;padding:0 8px;font-size:.8rem}
+.wform .titlebar span:last-child{letter-spacing:.35em;opacity:.7;font-size:.75rem}
+.wform .client{position:absolute;inset:28px 0 0 0}
+.wform.selected{outline:2px dashed var(--win-sel);outline-offset:3px}
+.ctl{position:absolute;font-family:var(--f-win);font-size:.82rem;color:var(--win-ink);user-select:none;touch-action:none;white-space:nowrap}
+.ctl.Button{border:1px solid var(--win-line);background:var(--win-title);border-radius:3px;padding:3px 10px;min-width:75px;text-align:center;cursor:pointer}
+.ctl.Label{padding:2px 1px;min-height:1.4em}
+.ctl.TextBox{border:1px solid var(--win-line);background:var(--win-title);width:130px;padding:2px 5px;min-height:1.6em}
+.design .ctl{cursor:move}
+.design .ctl.sel{outline:1px dashed var(--win-sel);outline-offset:2px}
+.design .ctl.sel::after{content:"";position:absolute;inset:-6px;border:0;background:
+  linear-gradient(var(--win-sel),var(--win-sel)) left top/6px 6px no-repeat,
+  linear-gradient(var(--win-sel),var(--win-sel)) right top/6px 6px no-repeat,
+  linear-gradient(var(--win-sel),var(--win-sel)) left bottom/6px 6px no-repeat,
+  linear-gradient(var(--win-sel),var(--win-sel)) right bottom/6px 6px no-repeat;pointer-events:none}
+.props{display:grid;gap:0;font-size:.82rem}
+.props .pr{display:grid;grid-template-columns:80px minmax(0,1fr);border-bottom:1px solid var(--win-line)}
+.props .pr span{padding:5px 8px;border-right:1px solid var(--win-line);background:var(--win)}
+.props .pr input{border:0;border-radius:0;background:var(--win-title);padding:5px 8px;font-family:var(--f-win);font-size:.82rem}
+.props .pr input:focus{box-shadow:inset 0 0 0 2px var(--win-sel)}
+.props .sel-name{padding:6px 8px;font-weight:700;border-bottom:1px solid var(--win-line);overflow-wrap:anywhere}
+.props .perr{color:var(--bad);padding:6px 8px;font-size:.78rem}
+.props .acts{padding:8px;display:grid;gap:6px}
+.vs-code{font-family:var(--f-mono);font-size:.84rem;line-height:1.65;background:var(--code-bg);color:var(--code-ink);padding:12px 0;min-height:100%;overflow-x:auto}
+.vs-code .ln{white-space:pre;padding:0 14px}
+.vs-code textarea{display:block;width:calc(100% - 28px);margin:2px 14px 2px calc(14px + 12ch);background:#13262A;color:var(--code-ink);border:1px solid #2C4A4E;border-radius:4px;font-family:var(--f-mono);font-size:.84rem;padding:4px 8px;resize:vertical;min-height:2.4em;max-width:none}
+.vs-code textarea:focus{border-color:var(--hi);box-shadow:0 0 0 2px rgba(224,154,26,.35)}
+.vs-code .hint{color:var(--code-dim);font-style:italic;padding:0 14px 0 calc(14px + 12ch);font-size:.78rem}
+.errlist{border-top:1px solid var(--win-line);background:var(--win-title);font-size:.8rem}
+.errlist .eh{display:flex;gap:12px;padding:5px 10px;border-bottom:1px solid var(--win-line);font-weight:700;font-size:.75rem}
+.errlist .rows{max-height:130px;overflow:auto}
+.errlist .er{display:grid;grid-template-columns:22px 70px minmax(0,1fr) 140px;gap:8px;padding:4px 10px;border-bottom:1px solid var(--win-line);cursor:pointer}
+.errlist .er:hover{background:var(--win)}
+.errlist .ok{padding:6px 10px;color:var(--ok)}
+.x{color:var(--bad);font-weight:700}
+.checklist{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.checklist li{display:grid;grid-template-columns:24px minmax(0,1fr);gap:8px;align-items:start;padding:6px 8px;border-radius:8px}
+.checklist li .bx{width:20px;height:20px;border:2px solid var(--line);border-radius:5px;display:grid;place-items:center;font-size:.8rem;margin-top:2px}
+.checklist li.done .bx{background:var(--ok);border-color:var(--ok);color:#fff}
+.checklist li.done{color:var(--muted)}
+.checklist li.next{background:var(--hi-soft)}
+.checklist small{display:block;color:var(--muted);font-size:.8rem}
+.done-banner{background:var(--ok-soft);color:var(--ok);border-radius:10px;padding:10px 14px;font-weight:700}
+
+/* run window */
+.runlayer{position:fixed;inset:0;z-index:30;background:rgba(10,20,18,.45);display:grid;place-items:center;padding:16px}
+.runwin{position:relative;background:var(--win);color:var(--win-ink);border:1px solid var(--win-line);box-shadow:0 18px 50px rgba(0,0,0,.35);max-width:100%;overflow:auto}
+.runwin .titlebar{height:30px;background:var(--win-title);border-bottom:1px solid var(--win-line);display:flex;align-items:center;justify-content:space-between;padding:0 4px 0 10px;font-family:var(--f-win);font-size:.82rem}
+.runwin .titlebar button{border:0;background:transparent;cursor:pointer;padding:4px 10px;font-size:.9rem;color:var(--win-ink)}
+.runwin .titlebar button:hover{background:var(--bad);color:#fff}
+.runwin .client{position:relative}
+.runwin .ctl.Button:hover{border-color:var(--win-sel)}
+.runwin .ctl.Button:active{transform:translateY(1px)}
+.runwin input.ctl.TextBox{font-family:var(--f-win);font-size:.82rem;border-radius:0}
+.msgbox{position:absolute;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.15)}
+.msgbox div{background:var(--win-title);border:1px solid var(--win-line);padding:16px 18px;min-width:200px;display:grid;gap:12px;box-shadow:0 8px 20px rgba(0,0,0,.25)}
+.runhint{position:absolute;left:0;right:0;bottom:-34px;text-align:center;color:#fff;font-size:.85rem}
+
+/* --- stop 7 & 8 naming --- */
+.mock{position:relative;background:var(--win);border:1px solid var(--win-line);color:var(--win-ink);font-family:var(--f-win);font-size:.8rem;margin:0}
+.mock-scroll{overflow-x:auto;padding:4px 4px 10px}
+.mock .titlebar{height:26px;background:var(--win-title);border-bottom:1px solid var(--win-line);display:flex;align-items:center;justify-content:space-between;padding:0 8px;cursor:pointer}
+.mock .titlebar span:last-child{letter-spacing:.35em;opacity:.7}
+.mock .m{position:absolute;cursor:pointer;display:flex;align-items:center;gap:4px;white-space:nowrap}
+.mock .m:hover{outline:2px solid var(--accent);outline-offset:1px}
+.mock .m.sel,.mock .titlebar.sel{outline:3px solid var(--hi);outline-offset:1px}
+.mock .m.named::before{content:"✓";position:absolute;top:-9px;right:-9px;background:var(--ok);color:#fff;border-radius:50%;width:16px;height:16px;font-size:10px;display:grid;place-items:center}
+.mock .m.Button{border:1px solid var(--win-line);background:var(--win-title);justify-content:center;border-radius:2px}
+.mock .m.TextBox,.mock .m.ComboBox,.mock .m.ListBox{border:1px solid var(--win-line);background:var(--win-title);padding:2px 5px;align-items:flex-start}
+.mock .m.ComboBox::after{content:"▾";margin-left:auto}
+.mock .m .dot{width:12px;height:12px;border:1px solid var(--win-line);border-radius:50%;background:var(--win-title)}
+.mock .m.Result{background:#A9BED6;color:#13202B;font-size:1.1rem;padding:0 6px}
+.mock.navy{background:#0B0B45;color:#fff}
+.mock.navy .m.Label{color:#fff}
+.namebox{display:grid;gap:8px}
+.namebox .row input{flex:1}
+.nlist{display:grid;gap:4px;font-size:.86rem}
+.nlist div{display:flex;justify-content:space-between;gap:8px;padding:4px 8px;border-radius:6px;background:var(--paper)}
+.nlist code{color:var(--accent);font-weight:600}
+.msg{font-size:.9rem;padding:8px 12px;border-radius:8px}
+.msg.ok{background:var(--ok-soft);color:var(--ok)} .msg.bad{background:var(--bad-soft);color:var(--bad)}
+.bigq{font-family:var(--f-display);font-size:1.4rem;font-weight:700}
+
+/* quiz */
+.q{display:grid;gap:8px}
+.opts{display:grid;gap:6px}
+.opt{text-align:left;border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:9px 12px;cursor:pointer}
+.opt:hover:not([disabled]){border-color:var(--accent)}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)} .opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt[disabled]{cursor:default}
+.why{font-size:.9rem;color:var(--muted)}
+.score{font-family:var(--f-display);font-size:2.6rem;font-weight:800}
+.wide-left{grid-template-columns:minmax(0,2fr) minmax(0,1fr)}
+.sticky{position:sticky;top:90px}
+
+@media (max-width:1000px){
+  .vs-body{grid-template-columns:120px minmax(0,1fr)}
+  .vs-body .pane:last-child{grid-column:1/-1;border-left:0;border-top:1px solid var(--win-line)}
+}
+@media (max-width:900px){
+  .wrap{grid-template-columns:minmax(0,1fr)}
+  .rail{border-right:0;border-bottom:1px solid var(--line);padding:8px max(16px,env(safe-area-inset-right,0px)) 8px max(16px,env(safe-area-inset-left,0px));overflow-x:auto}
+  .rail ol{display:flex;gap:4px;width:max-content}
+  .rail a{white-space:nowrap;padding:6px 10px}
+  .rail .slide{display:none}
+  .grid2,.wide-left,.archgrid,.xlate{grid-template-columns:minmax(0,1fr)}
+  .sticky{position:static}
+  .stage{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+}
+@media (max-width:600px){
+  .vs-body{grid-template-columns:minmax(0,1fr)}
+  .vs-body .pane:first-child{border-right:0;border-bottom:1px solid var(--win-line)}
+  .tbx{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .errlist .er{grid-template-columns:22px 60px minmax(0,1fr)}
+  .errlist .er span:last-child{display:none}
+  .brand .tag{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<header class="top">
+  <div class="brand"><h1>HNDIT1012 Week 1 Lab</h1><span class="tag">Visual Application Programming · C# Windows Forms</span></div>
+  <div class="tools">
+    <button class="btn small" id="fontDown" title="Smaller text">A−</button>
+    <button class="btn small" id="fontUp" title="Larger text for the projector">A+</button>
+    <button class="btn small" id="fullBtn">Full screen</button>
+  </div>
+  <div class="progress"><i id="prog"></i></div>
+</header>
+
+<div class="wrap">
+  <aside class="rail"><nav><ol id="nav"></ol></nav></aside>
+  <main class="stage">
+
+<!-- 1 -->
+<section class="stop" id="languages" data-name="Programs &amp; languages" data-slide="2–3">
+  <div><div class="eyebrow">Stop 1 · Slides 2–3</div><h2>Programs and programming languages</h2>
+  <p class="lead">A <b>program</b> is a set of instructions in a programming language for a computer to execute. Languages come in two styles. Sort each snippet: does it say <b>how</b> to do it step by step, or only <b>what</b> result it wants?</p></div>
+  <div class="row"><span class="pill hi" id="sortScore">0 / 6 sorted</span><span class="muted" style="font-size:.9rem">Imperative = how · Declarative = what</span><button class="btn small" id="sortReset">Reset</button></div>
+  <div class="sort" id="sort"></div>
+  <div class="card"><h3>Key words from the slides</h3>
+    <div class="tbl-wrap"><table><tbody>
+      <tr><td><b>Program</b></td><td>A sequence of instructions, written in a programming language, for a computer to execute. One component of software.</td></tr>
+      <tr><td><b>Programming language</b></td><td>A language used to write programs. Thousands exist: C++, C#, Visual Basic, Java …</td></tr>
+      <tr><td><b>Source code</b></td><td>The program in its human-readable form, such as <code>Form1.cs</code>.</td></tr>
+      <tr><td><b>Executable (.exe)</b></td><td>A file Windows can run: an application or an installer.</td></tr>
+    </tbody></table></div></div>
+</section>
+
+<!-- 2 -->
+<section class="stop" id="translators" data-name="Compiler vs interpreter" data-slide="4–7" hidden>
+  <div><div class="eyebrow">Stop 2 · Slides 4–7</div><h2>Compiler vs interpreter</h2>
+  <p class="lead">A computer only runs machine code, so source code must be <b>translated</b>. Run the same four-line program both ways, then put a mistake on line 3 and compare what happens.</p></div>
+  <div class="row">
+    <div class="toggle" role="group" aria-label="Translator"><button id="tComp" aria-pressed="true">Compiler</button><button id="tInt" aria-pressed="false">Interpreter</button></div>
+    <label class="row" style="gap:6px;font-size:.92rem"><input type="checkbox" id="tBug"> Put a mistake on line 3</label>
+    <button class="btn primary" id="tRun">▶ Run</button><button class="btn" id="tReset">Reset</button>
+  </div>
+  <div class="xlate">
+    <div class="stack"><div class="eyebrow">Source code</div><div class="code" id="tSrc"></div>
+      <div class="eyebrow">Files on disk</div><div class="fileshelf" id="tFiles"></div></div>
+    <div class="stack"><div class="eyebrow">Translator</div><div class="log" id="tLog"></div>
+      <div class="row" style="justify-content:space-between"><span class="muted">Lines translated so far</span><span class="counter" id="tCount">0</span></div></div>
+    <div class="stack"><div class="eyebrow">Output</div><div class="console" id="tOut"></div><div class="explain" id="tNote"><b>Press Run.</b> Then press Run again and watch the counter.</div></div>
+  </div>
+  <div class="tbl-wrap"><table><thead><tr><th></th><th>Compiler</th><th>Interpreter</th></tr></thead><tbody>
+    <tr><td>Translates</td><td>The whole program, before it runs</td><td>One line at a time, while it runs</td></tr>
+    <tr><td>Creates a file</td><td>Yes, an .exe</td><td>No</td></tr>
+    <tr><td>Errors</td><td>All reported before anything runs</td><td>Program stops when it reaches the bad line</td></tr>
+    <tr><td>Running again</td><td>Fast: just run the .exe</td><td>Slower: translates every time</td></tr>
+    <tr><td>Examples</td><td>C, C++</td><td>Python, JavaScript</td></tr>
+  </tbody></table></div>
+</section>
+
+<!-- 3 -->
+<section class="stop" id="dotnet" data-name=".NET Framework" data-slide="8–10" hidden>
+  <div><div class="eyebrow">Stop 3 · Slides 8–10</div><h2>Architecture of the .NET Framework</h2>
+  <p class="lead">.NET uses both ideas. A compiler turns C# into <b>CIL</b> stored in an assembly; when the app runs, the <b>CLR</b>'s <b>JIT compiler</b> turns CIL into machine code. Click any block, or follow HelloWorld.exe through the layers.</p></div>
+  <div class="row"><button class="btn primary" id="aTrace">▶ Follow HelloWorld.exe</button><span class="muted" id="aStep"></span></div>
+  <div class="grid2">
+    <div class="arch" id="arch"></div>
+    <div class="explain" id="aNote" style="position:sticky;top:90px"><b>Click a block.</b> Start at the top with the languages.</div>
+  </div>
+</section>
+
+<!-- 4 -->
+<section class="stop" id="ide" data-name="Visual Studio tour" data-slide="11–15" hidden>
+  <div><div class="eyebrow">Stop 4 · Slides 11–15</div><h2>Find your way around Visual Studio 2022</h2>
+  <p class="lead">An <b>IDE</b> puts the editor, designer, compiler and debugger in one window. Explore each area, then play <b>Find it</b>.</p></div>
+  <div class="row"><div class="toggle" role="group" aria-label="Mode"><button id="iExplore" aria-pressed="true">Explore</button><button id="iGame" aria-pressed="false">Find it</button></div><span id="iScore" class="pill hi" hidden></span></div>
+  <div id="iPrompt" class="gameq" hidden></div>
+  <div class="ide-scroll"><div class="ide" id="ideMock">
+    <div class="zone ide-z-menu" data-z="menu"><span class="zt">Menu bar</span> File&nbsp;&nbsp; Edit&nbsp;&nbsp; View&nbsp;&nbsp; Project&nbsp;&nbsp; Build&nbsp;&nbsp; Debug&nbsp;&nbsp; Tools&nbsp;&nbsp; Help</div>
+    <div class="zone ide-z-tool" data-z="start"><span class="zt">Toolbar</span> Debug ▾ &nbsp; Any CPU ▾ &nbsp; <b style="color:var(--ok)">▶ Start</b></div>
+    <div class="zone ide-z-box" data-z="toolbox"><div class="zt">Toolbox</div><div class="mini-item">▢ Button</div><div class="mini-item">A Label</div><div class="mini-item">ab| TextBox</div><div class="mini-item">◉ RadioButton</div><div class="mini-item">☑ CheckBox</div><div class="mini-item">▤ ListBox</div><div class="mini-item">▾ ComboBox</div></div>
+    <div class="zone ide-z-ed" data-z="editor"><div class="zt">Form1.cs [Design] &nbsp;|&nbsp; Form1.cs</div><div class="mini-form"><div class="bar">Form1</div><div style="position:absolute;left:20px;top:40px;border:1px solid var(--win-line);padding:2px 10px;background:var(--win-title)">Click this</div><div style="position:absolute;left:20px;top:80px">label1</div></div></div>
+    <div class="zone ide-z-sol" data-z="solution"><div class="zt">Solution Explorer</div><div class="mini-item">▣ Solution 'HelloWorld'</div><div class="mini-item">&nbsp;&nbsp;▸ HelloWorld</div><div class="mini-item">&nbsp;&nbsp;&nbsp;&nbsp;▸ Form1.cs</div><div class="mini-item">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Program.cs</div></div>
+    <div class="zone ide-z-out" data-z="output"><div class="zt">Output / Error List</div><div class="mini-item">Build started…</div><div class="mini-item">========== Build: 1 succeeded ==========</div></div>
+    <div class="zone ide-z-prop" data-z="props"><div class="zt">Properties</div><div class="mini-item">(Name) &nbsp;btnClickThis</div><div class="mini-item">Text &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Click this</div><div class="mini-item">Font &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Segoe UI 9pt</div></div>
+  </div></div>
+  <div class="explain" id="iNote"><b>Click any area of the IDE.</b></div>
+</section>
+
+<!-- 5 -->
+<section class="stop" id="install" data-name="Can my PC run it?" data-slide="16–18" hidden>
+  <div><div class="eyebrow">Stop 5 · Slides 16–18</div><h2>Can my PC run Visual Studio 2022?</h2>
+  <p class="lead">Enter your computer's details (Settings → System → About shows most of them) and check them against the requirements.</p></div>
+  <div class="chips" id="pcPresets"></div>
+  <div class="grid2">
+    <div class="card stack">
+      <div class="row" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <label class="f">Processor speed (GHz)<input type="number" id="pcGhz" step="0.1" value="2.4"></label>
+        <label class="f">Processor cores<input type="number" id="pcCores" value="4"></label>
+        <label class="f">System type<select id="pcBits"><option value="x64">64-bit (x64)</option><option value="x86">32-bit (x86)</option><option value="arm">64-bit ARM</option></select></label>
+        <label class="f">RAM (GB)<input type="number" id="pcRam" value="8"></label>
+        <label class="f">Free disk space (GB)<input type="number" id="pcDisk" value="60"></label>
+        <label class="f">Drive type<select id="pcSsd"><option value="ssd">SSD</option><option value="hdd">Hard disk (HDD)</option></select></label>
+        <label class="f">Screen resolution<select id="pcRes"><option value="1">1280 × 720</option><option value="2" selected>1366 × 768</option><option value="3">1920 × 1080 or higher</option></select></label>
+      </div>
+    </div>
+    <div class="stack">
+      <div class="verdict" id="pcVerdict"></div>
+      <div class="tbl-wrap"><table class="req"><thead><tr><th>Item</th><th>Result</th><th>Needed</th></tr></thead><tbody id="pcBody"></tbody></table></div>
+      <div class="card"><h3>Before installing</h3><p>Check the requirements, install the latest Windows updates, reboot, and free up disk space (Disk Cleanup). Download the free <b>Community</b> edition from <a href="https://visualstudio.microsoft.com/downloads" target="_blank" rel="noopener">visualstudio.microsoft.com/downloads</a> and tick the <b>.NET desktop development</b> workload.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 -->
+<section class="stop" id="designer" data-name="Form designer lab" data-slide="19–29" hidden>
+  <div><div class="eyebrow">Stop 6 · Slides 19–29 + Lab Sheet 1</div><h2>Build it: the form designer</h2>
+  <p class="lead">A working practice copy of the Windows Forms designer. Add controls from the Toolbox, set <b>(Name)</b> and <b>Text</b> in Properties, double-click a button to write its code, then press <b>Start</b>.</p></div>
+  <div class="row"><span class="muted" style="font-size:.9rem">Challenge:</span><div class="chips" id="chal"></div><button class="btn small" id="solve">Show solution</button><button class="btn small" id="restart">Start over</button></div>
+  <div class="grid2 wide-left">
+    <div class="vs" id="vs">
+      <div class="vs-bar"><span class="proj" id="projName">HelloWorld</span><span style="opacity:.6">— practice IDE</span><span style="margin-left:auto"></span><button class="vs-start" id="startBtn" title="Start (F5)">▶ Start</button></div>
+      <div class="vs-body">
+        <div class="pane"><h5>Toolbox</h5><div class="tbx" id="toolbox">
+          <button data-t="Button"><span class="ic">▢</span>Button</button>
+          <button data-t="Label"><span class="ic">A</span>Label</button>
+          <button data-t="TextBox"><span class="ic">ab|</span>TextBox</button></div>
+          <p style="padding:6px 10px;font-size:.75rem;opacity:.75;margin:0">Click a control to add it to the form, then drag it into place.</p></div>
+        <div style="display:flex;flex-direction:column;min-width:0">
+          <div class="doc-tabs" role="tablist"><button role="tab" id="tabDesign" aria-selected="true">Form1.cs [Design]</button><button role="tab" id="tabCode" aria-selected="false">Form1.cs</button></div>
+          <div class="surface-wrap design" id="designView"><div class="wform" id="wform"><div class="titlebar"><span id="formTitle">Form1</span><span>— ▢ ✕</span></div><div class="client" id="client"></div></div></div>
+          <div id="codeView" hidden style="flex:1;overflow:auto"><div class="vs-code" id="codeArea"></div></div>
+          <div class="errlist"><div class="eh"><span>Error List</span><span id="errCount" style="font-weight:400"></span></div><div class="rows" id="errRows"><div class="ok" style="opacity:.7">Press Start to build.</div></div></div>
+        </div>
+        <div class="pane"><h5>Properties</h5><div class="props" id="props"></div></div>
+      </div>
+    </div>
+    <div class="stack">
+      <div class="card stack"><h3 id="chalTitle">Hello World</h3><ul class="checklist" id="checklist"></ul><div id="doneBanner"></div></div>
+      <div class="card"><h3>The code understands</h3>
+        <div class="code" style="font-size:.8rem" id="supported"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 7 -->
+<section class="stop" id="prefixes" data-name="Naming controls" data-slide="Lab 1" hidden>
+  <div><div class="eyebrow">Stop 7 · Lab Sheet 1</div><h2>Naming controls with prefixes</h2>
+  <p class="lead">Every control gets a <b>(Name)</b>: a lowercase prefix that says what it is, then a PascalCase word that says what it is for. <code>button1</code> tells you nothing; <code>btnSave</code> tells you everything.</p></div>
+  <div class="grid2">
+    <div class="card stack">
+      <div class="row" style="justify-content:space-between"><span class="eyebrow" id="pRound">Round 1 of 10</span><span class="pill hi" id="pScore">0 correct</span></div>
+      <div class="bigq" id="pQ"></div>
+      <div class="row"><input type="text" id="pIn" placeholder="Type a name, e.g. btnSave" autocomplete="off" spellcheck="false" style="flex:1;min-width:160px"><button class="btn primary" id="pCheck">Check</button></div>
+      <div id="pFb"></div>
+      <div class="row"><button class="btn" id="pNext" hidden>Next →</button><button class="btn small" id="pAgain" hidden>Play again</button></div>
+    </div>
+    <div class="stack">
+      <div class="tbl-wrap"><table><thead><tr><th>Prefix</th><th>Control</th><th>Example</th></tr></thead><tbody>
+        <tr><td class="mono"><b>frm</b></td><td>Form</td><td class="mono">frmCalculator</td></tr>
+        <tr><td class="mono"><b>btn</b></td><td>Button</td><td class="mono">btnClear</td></tr>
+        <tr><td class="mono"><b>lbl</b></td><td>Label</td><td class="mono">lblResult</td></tr>
+        <tr><td class="mono"><b>txt</b></td><td>TextBox</td><td class="mono">txtFirstName</td></tr>
+        <tr><td class="mono"><b>rdo</b></td><td>RadioButton</td><td class="mono">rdoMale</td></tr>
+        <tr><td class="mono"><b>cb / chk</b></td><td>CheckBox</td><td class="mono">cbEmail</td></tr>
+        <tr><td class="mono"><b>lst</b></td><td>ListBox</td><td class="mono">lstBill</td></tr>
+        <tr><td class="mono"><b>cmb</b></td><td>ComboBox (drop-down)</td><td class="mono">cmbCourse</td></tr>
+        <tr><td class="mono"><b>pnl</b></td><td>Panel</td><td class="mono">pnlButtons</td></tr>
+        <tr><td class="mono"><b>img</b></td><td>Image / PictureBox</td><td class="mono">imgLogo</td></tr>
+        <tr><td class="mono"><b>dtg</b></td><td>DataGrid</td><td class="mono">dtgStudents</td></tr>
+      </tbody></table></div>
+      <p class="muted" style="font-size:.85rem">The lab sheet's table lists DataGrid the other way round; the prefix is <code>dtg</code>. Its DropDownList and HyperLink rows are web controls; in Windows Forms use ComboBox and LinkLabel.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 8 -->
+<section class="stop" id="exercises" data-name="Name the lab forms" data-slide="Lab 1" hidden>
+  <div><div class="eyebrow">Stop 8 · Lab Sheet 1 exercises</div><h2>Name every object in the lab forms</h2>
+  <p class="lead">The exercise says: <i>create the following forms and add a suitable name for each object (form and control)</i>. Click each control in the form (and its title bar for the form itself), then name it.</p></div>
+  <div class="row"><div class="chips" id="exTabs"></div><span class="pill hi" id="exScore"></span><button class="btn small" id="exShow">Show suggested names</button><button class="btn small" id="exReset">Clear names</button></div>
+  <div class="grid2 wide-left">
+    <div class="mock-scroll"><div id="exMock"></div></div>
+    <div class="stack">
+      <div class="card namebox"><div class="muted" style="font-size:.85rem">Selected</div><div class="bigq" id="exSel" style="font-size:1.1rem">Click a control</div>
+        <div class="row"><input type="text" id="exIn" placeholder="(Name)" autocomplete="off" spellcheck="false" disabled><button class="btn primary" id="exSet" disabled>Set name</button></div>
+        <div id="exFb"></div></div>
+      <div class="card"><h3>Names so far</h3><div class="nlist" id="exList"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 9 -->
+<section class="stop" id="quiz" data-name="Week 1 quiz" data-slide="All" hidden>
+  <div><div class="eyebrow">Stop 9 · Check</div><h2>Week 1 quiz</h2><p class="lead">Ten questions on this week's slides and lab.</p></div>
+  <div class="grid2 wide-left">
+    <div class="stack" id="quizBox"></div>
+    <div class="card stack sticky"><div class="muted">Score</div><div class="score" id="qScore">0 / 10</div><div class="muted" id="qMsg"></div><button class="btn" id="qReset" style="justify-self:start">Try again</button></div>
+  </div>
+</section>
+
+    <div class="pager"><button class="btn" id="prev">← Previous</button><span class="muted" style="align-self:center;font-size:.85rem">Use <span class="key">←</span> <span class="key">→</span> to move between stops</span><button class="btn primary" id="next">Next →</button></div>
+  </main>
+</div>
+<div id="runLayer" hidden></div>
+
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const reduced=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+const wait=ms=>new Promise(r=>setTimeout(r,reduced?0:ms));
+const KW=new Set("using namespace class static void public private partial return if else for while new int double decimal string char bool true false var this null object".split(" "));
+function hl(src){
+  const re=/(\/\/[^\n]*)|("(?:[^"\\]|\\.)*")|(\b\d+(?:\.\d+)?\b)|(\b[A-Za-z_][A-Za-z0-9_]*\b)/g; let out="",last=0,m;
+  while((m=re.exec(src))){ out+=esc(src.slice(last,m.index));
+    if(m[1]) out+=`<span class="c">${esc(m[1])}</span>`; else if(m[2]) out+=`<span class="s">${esc(m[2])}</span>`; else if(m[3]) out+=`<span class="nm">${m[3]}</span>`;
+    else { const w=m[4]; out+=KW.has(w)?`<span class="k">${w}</span>`:(/^[A-Z]/.test(w)?`<span class="t">${w}</span>`:w); }
+    last=re.lastIndex; }
+  return out+esc(src.slice(last));
+}
+function codeLines(el,lines,plain){ el.innerHTML=lines.map((l,i)=>`<span class="ln" data-n="${i+1}">${plain?esc(l):hl(l)||" "}</span>`).join(""); }
+function mark(el,i,cls="on"){ [...el.children].forEach((c,j)=>c.classList.toggle(cls,j===i)); }
+
+/* ================= navigation ================= */
+const stops=$$(".stop"); let cur=0;
+$("#nav").innerHTML=stops.map((s,i)=>`<li><a href="#${s.id}" data-i="${i}"><span class="n">${String(i+1).padStart(2,"0")}</span><span>${s.dataset.name}</span><span class="slide">${s.dataset.slide}</span></a></li>`).join("");
+$$("#nav a").forEach(a=>a.addEventListener("click",e=>{e.preventDefault();go(+a.dataset.i);}));
+function go(i){
+  cur=Math.max(0,Math.min(stops.length-1,i));
+  stops.forEach((s,j)=>s.hidden=j!==cur);
+  $$("#nav a").forEach(a=>a.setAttribute("aria-current",+a.dataset.i===cur?"true":"false"));
+  const a=$(`#nav a[data-i="${cur}"]`); if(a&&a.scrollIntoView) a.scrollIntoView({block:"nearest",inline:"nearest"});
+  $("#prev").disabled=cur===0; $("#next").disabled=cur===stops.length-1;
+  $("#prog").style.width=((cur+1)/stops.length*100)+"%";
+  try{history.replaceState(null,"","#"+stops[cur].id);}catch(e){}
+  window.scrollTo({top:0});
+}
+$("#prev").onclick=()=>go(cur-1); $("#next").onclick=()=>go(cur+1);
+document.addEventListener("keydown",e=>{ if(/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)||!$("#runLayer").hidden) return; if(e.key==="ArrowRight")go(cur+1); if(e.key==="ArrowLeft")go(cur-1); });
+let scale=1; try{scale=+localStorage.getItem("w1Scale")||1;}catch(e){}
+const setScale=v=>{scale=Math.max(.8,Math.min(1.6,Math.round(v*10)/10));document.documentElement.style.setProperty("--scale",scale);try{localStorage.setItem("w1Scale",scale);}catch(e){}};
+setScale(scale); $("#fontUp").onclick=()=>setScale(scale+.1); $("#fontDown").onclick=()=>setScale(scale-.1);
+$("#fullBtn").onclick=()=>{try{const p=document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();if(p&&p.catch)p.catch(()=>{});}catch(e){}};
+
+/* ================= 1. sorter ================= */
+const SNIPS=[
+  ["C#","int total = 0;\nfor (int i = 1; i <= 5; i++)\n    total = total + i;","imp","The loop spells out each step to reach the total."],
+  ["SQL","SELECT Name FROM Students\nWHERE Marks >= 50;","dec","You state which rows you want; the database decides how to find them."],
+  ["HTML","<h1>Welcome</h1>\n<p>HNDIT 2026</p>","dec","You describe what the page contains, not how to draw it."],
+  ["Java","if (marks >= 50) {\n    System.out.println(\"Pass\");\n}","imp","A step-by-step instruction: check, then print."],
+  ["CSS","h1 { color: teal; }","dec","You state the result (teal headings), not the steps to colour them."],
+  ["Visual Basic","Dim x As Integer = 5\nx = x * 2\nMsgBox(x)","imp","Three steps run in order to change and show x."]
+];
+let sorted={};
+function renderSort(){
+  $("#sort").innerHTML=SNIPS.map((s,i)=>{ const a=sorted[i]; const st=a===undefined?"":(a===s[2]?"right":"wrong");
+    return `<div class="scard ${st}"><span class="lang">${s[0]}</span><pre>${esc(s[1])}</pre>
+    ${a===undefined?`<div class="row"><button class="btn small" data-i="${i}" data-a="imp">Imperative (how)</button><button class="btn small" data-i="${i}" data-a="dec">Declarative (what)</button></div>`
+      :`<div><span class="pill ${a===s[2]?"ok":"bad"}">${a===s[2]?"Correct":"Not quite"}: ${s[2]==="imp"?"imperative":"declarative"}</span><div class="muted" style="font-size:.85rem;margin-top:4px">${esc(s[3])}</div></div>`}</div>`;}).join("");
+  $$("#sort button").forEach(b=>b.onclick=()=>{sorted[b.dataset.i]=b.dataset.a;renderSort();});
+  const n=Object.keys(sorted).length, r=Object.entries(sorted).filter(([i,a])=>SNIPS[i][2]===a).length;
+  $("#sortScore").textContent= n<SNIPS.length?`${n} / ${SNIPS.length} sorted`:`${r} / ${SNIPS.length} correct`;
+}
+$("#sortReset").onclick=()=>{sorted={};renderSort();}; renderSort();
+
+/* ================= 2. compiler vs interpreter ================= */
+const SRC_OK=['print "Start"',"x = 10","print x * 2",'print "End"'], SRC_BAD=['print "Start"',"x = 10","print x *",'print "End"'];
+const MC=["10110000 01100001","10001001 11011000","00000001 11000011","10110100 00001001"];
+let tMode="comp", tCount=0, exeBuilt=false, tBusy=false;
+function src(){return $("#tBug").checked?SRC_BAD:SRC_OK;}
+function tShow(){ codeLines($("#tSrc"),src(),true); }
+function outLine(i){ return i===0?"Start":i===2?"20":i===3?"End":null; }
+function tResetAll(){ tCount=0; exeBuilt=false; $("#tCount").textContent=0; $("#tLog").innerHTML=""; $("#tOut").textContent=""; $("#tFiles").innerHTML='<span class="file">program.src</span>'; $("#tNote").innerHTML="<b>Press Run.</b> Then press Run again and watch the counter."; tShow(); }
+function log(t,err){ $("#tLog").insertAdjacentHTML("beforeend",`<div class="${err?"e":""}">${t}</div>`); $("#tLog").scrollTop=1e6; }
+async function tRun(){
+  if(tBusy) return; tBusy=true; $("#tRun").disabled=true; const S=src(), bad=$("#tBug").checked; $("#tOut").textContent="";
+  if(tMode==="comp"){
+    if(!exeBuilt){
+      log("<b>Compiling whole program…</b>");
+      for(let i=0;i<S.length;i++){ mark($("#tSrc"),i); await wait(450);
+        if(bad&&i===2){ $("#tSrc").children[2].classList.add("err"); log("line 3: error, expected a value after *",true); }
+        else { tCount++; $("#tCount").textContent=tCount; log(`line ${i+1} → ${MC[i]}`); } }
+      mark($("#tSrc"),-1);
+      if(bad){ log("Build FAILED. No .exe created.",true); $("#tNote").innerHTML="<b>Nothing ran.</b> The compiler checked every line first and found the mistake. You must fix it before you get an .exe."; tBusy=false; $("#tRun").disabled=false; return; }
+      exeBuilt=true; $("#tFiles").insertAdjacentHTML("beforeend",'<span class="file exe">program.exe</span>'); log("Build succeeded → program.exe");
+    } else log("<b>Running program.exe</b> (no translation needed)");
+    for(let i=0;i<S.length;i++){ await wait(160); const o=outLine(i); if(o) $("#tOut").textContent+=o+"\n"; }
+    $("#tNote").innerHTML= tCount<=4?"<b>Translated once, then ran.</b> Press Run again: the counter will not move because the .exe already exists.":"<b>Run again: no translation.</b> The .exe runs straight away. That is why compiled programs start faster.";
+  } else {
+    log("<b>Interpreting line by line…</b>");
+    for(let i=0;i<S.length;i++){ mark($("#tSrc"),i); await wait(450);
+      if(bad&&i===2){ $("#tSrc").children[2].classList.add("err"); log("line 3: error, expected a value after *",true); $("#tOut").textContent+="Error on line 3. Program stopped.\n";
+        $("#tNote").innerHTML="<b>Lines 1 and 2 already ran</b> before the interpreter reached the mistake. An interpreter only finds an error when it gets to that line."; mark($("#tSrc"),-1); tBusy=false; $("#tRun").disabled=false; return; }
+      tCount++; $("#tCount").textContent=tCount; log(`line ${i+1}: translate → run`); const o=outLine(i); if(o) $("#tOut").textContent+=o+"\n"; }
+    mark($("#tSrc"),-1);
+    $("#tNote").innerHTML="<b>Translated while running.</b> No .exe file was made. Press Run again: the counter keeps going up, because every run translates again.";
+  }
+  tBusy=false; $("#tRun").disabled=false;
+}
+function setT(m){ tMode=m; $("#tComp").setAttribute("aria-pressed",m==="comp"); $("#tInt").setAttribute("aria-pressed",m==="int"); tResetAll(); }
+$("#tComp").onclick=()=>setT("comp"); $("#tInt").onclick=()=>setT("int"); $("#tBug").onchange=tResetAll; $("#tRun").onclick=tRun; $("#tReset").onclick=tResetAll; tResetAll();
+
+/* ================= 3. .NET architecture ================= */
+const ARCH=[
+  {row:[["cs","C#","Form1.cs"],["vb","Visual Basic",".vb files"],["fs","F#",".fs files"]],label:"Languages"},
+  {row:[["comp","Language compilers","csc (C#), vbc (VB), fsc (F#)"]],arrow:"build"},
+  {row:[["cil","CIL code + metadata","Common Intermediate Language"]]},
+  {row:[["asm","Assembly","HelloWorld.exe / .dll in bin\\Debug"]],arrow:"run"},
+  {clr:true},
+  {row:[["os","Windows","Operating system"]]},
+  {row:[["hw","Hardware","CPU runs machine code"]]}
+];
+const AINFO={
+  cs:"<b>C#</b> is the language we use in this module. You write it in Visual Studio; the file is <code>Form1.cs</code>.",
+  vb:"<b>Visual Basic .NET</b> is another .NET language. Code written in VB and C# ends up as the same CIL, so they can work together.",
+  fs:"<b>F#</b> is a functional .NET language. Same story: it compiles to CIL.",
+  comp:"<b>Language compilers</b> check your code for errors and translate it to CIL. This happens when you <b>Build</b> (Ctrl+Shift+B).",
+  cil:"<b>CIL (Common Intermediate Language)</b>, also called MSIL. It is language-agnostic: not C#, not machine code, but in between. Metadata describes your classes and methods.",
+  asm:"<b>Assembly</b>: the compiled file, with a <code>.exe</code> or <code>.dll</code> extension. This is what you give to users. They need the .NET Framework installed to run it.",
+  clr:"<b>CLR (Common Language Runtime)</b> is the engine that runs .NET programs. It loads the assembly and provides the services below.",
+  jit:"<b>JIT (just-in-time) compiler</b>: when a method is called for the first time, the JIT turns its CIL into machine code for the computer it is running on.",
+  gc:"<b>Garbage collector</b>: frees memory your program no longer uses, so you don't have to do it by hand.",
+  sec:"<b>Security and type checking</b>: the CLR checks code is safe before running it.",
+  exc:"<b>Exception handling</b>: when something goes wrong (dividing by zero, bad input), the CLR raises an exception your code can catch.",
+  fcl:"<b>Framework Class Library (FCL)</b>: thousands of ready-made classes. You use them every day: <code>System.Windows.Forms</code> gives you Form, Button and Label.",
+  wf:"<b>Windows Forms</b> (<code>System.Windows.Forms</code>): classes for desktop windows and controls. This module's main library.",
+  ado:"<b>ADO.NET</b> (<code>System.Data</code>): classes for talking to databases such as SQL Server.",
+  web:"<b>ASP.NET</b>: classes for web applications.",
+  bcl:"<b>Base classes</b>: strings, maths, files, dates and collections (<code>System</code>, <code>System.IO</code>).",
+  os:"<b>Windows</b>: .NET Framework runs on Windows. (Newer .NET versions also run on Linux and macOS.)",
+  hw:"<b>Hardware</b>: the CPU runs the native machine code the JIT produced."
+};
+const blk=(k,b,s,cls="")=>`<button class="blk ${cls}" data-k="${k}"><b>${b}</b><small>${s}</small></button>`;
+$("#arch").innerHTML=ARCH.map(r=>{
+  if(r.clr) return `<div class="archgrid"><div class="stack" style="gap:6px">${blk("clr","CLR · Common Language Runtime","Loads and runs assemblies","clr")}<div class="layer">${blk("jit","JIT compiler","CIL → machine code")}${blk("gc","Garbage collector","Frees memory")}${blk("sec","Security","Checks code")}${blk("exc","Exceptions","Handles errors")}</div></div>
+    <div class="stack" style="gap:6px">${blk("fcl","Framework Class Library","Ready-made classes","clr")}${blk("wf","Windows Forms","Form, Button, Label")}${blk("ado","ADO.NET","Databases")}${blk("bcl","Base classes","String, Math, File")}${blk("web","ASP.NET","Web apps")}</div></div><div class="down">↓</div>`;
+  return `${r.label?`<div class="muted mono" style="font-size:.72rem;letter-spacing:.08em;text-transform:uppercase">${r.label}</div>`:""}<div class="layer">${r.row.map(x=>blk(...x)).join("")}</div><div class="down">↓${r.arrow==="build"?" &nbsp;BUILD TIME":r.arrow==="run"?" &nbsp;RUN TIME":""}</div>`;
+}).join("").replace(/<div class="down">↓<\/div>$/,"");
+function aPick(k){ $$("#arch .blk").forEach(b=>b.classList.toggle("on",b.dataset.k===k)); $("#aNote").innerHTML=AINFO[k]; }
+$$("#arch .blk").forEach(b=>b.onclick=()=>aPick(b.dataset.k));
+$("#aTrace").onclick=async()=>{ $("#aTrace").disabled=true; const path=["cs","comp","cil","asm","clr","jit","wf","os","hw"]; for(let i=0;i<path.length;i++){ $("#aStep").textContent=`Step ${i+1} of ${path.length}`; aPick(path[i]); await wait(1600);} $("#aStep").textContent=""; $("#aTrace").disabled=false; };
+
+/* ================= 4. IDE tour ================= */
+const ZONES={
+  menu:"<b>Menu bar.</b> Every command lives here. <b>File → New → Project</b> creates a project; <b>View</b> reopens any window you closed.",
+  start:"<b>Toolbar and Start button.</b> ▶ Start (F5) builds and runs your app. Stop it with Shift+F5 or by closing the form.",
+  toolbox:"<b>Toolbox</b> (Ctrl+Alt+X). The controls you drag onto a form: Button, Label, TextBox and more. Pin it so it stays open.",
+  editor:"<b>Editor window</b> (centre). Shows <code>Form1.cs [Design]</code> for designing the form, or <code>Form1.cs</code> for code. F7 switches to code, Shift+F7 back to design.",
+  solution:"<b>Solution Explorer</b> (Ctrl+Alt+L). View, open and manage your files. A solution holds one or more projects.",
+  output:"<b>Output window</b> and Error List. Build messages, warnings, errors and debug messages appear here.",
+  props:"<b>Properties window</b> (F4). Change the selected control's properties: <b>(Name)</b> for code, <b>Text</b> for what users see, Font, colours and more."
+};
+const GAME=[["Where do you change a button's Text?","props"],["Where do you find a Label to drag onto the form?","toolbox"],["Where do you see that the build succeeded?","output"],["Which button runs your app?","start"],["Where do you open Program.cs?","solution"],["Where do you design the form and write code?","editor"],["Where would you go to reopen a window you closed?","menu"]];
+let iMode="explore", gIdx=0, gScore=0, gLock=false;
+function iModeSet(m){ iMode=m; $("#iExplore").setAttribute("aria-pressed",m==="explore"); $("#iGame").setAttribute("aria-pressed",m==="game"); $$(".zone").forEach(z=>z.classList.remove("on","good","badz"));
+  $("#iPrompt").hidden=m!=="game"; $("#iScore").hidden=m!=="game";
+  if(m==="game"){ gIdx=0;gScore=0; gShow(); } else $("#iNote").innerHTML="<b>Click any area of the IDE.</b>"; }
+function gShow(){ if(gIdx>=GAME.length){ $("#iPrompt").textContent=`Finished: ${gScore} of ${GAME.length} first time.`; $("#iNote").innerHTML="<b>Play again?</b> Press Find it."; return; } $("#iPrompt").textContent=`${gIdx+1}. ${GAME[gIdx][0]}`; $("#iScore").textContent=`${gScore} / ${GAME.length}`; $("#iNote").innerHTML="Click the right area."; }
+let firstTry=true;
+$$(".zone").forEach(z=>z.addEventListener("click",async()=>{
+  const k=z.dataset.z;
+  if(iMode==="explore"){ $$(".zone").forEach(x=>x.classList.toggle("on",x===z)); $("#iNote").innerHTML=ZONES[k]; return; }
+  if(gLock||gIdx>=GAME.length) return;
+  if(k===GAME[gIdx][1]){ gLock=true; z.classList.add("good"); if(firstTry) gScore++; $("#iNote").innerHTML="Correct. "+ZONES[k]; $("#iScore").textContent=`${gScore} / ${GAME.length}`; await wait(1400); z.classList.remove("good"); gIdx++; firstTry=true; gLock=false; gShow(); }
+  else { firstTry=false; z.classList.add("badz"); $("#iNote").innerHTML="Not there. That is the "+ZONES[k].replace(/<[^>]+>/g,"").split(".")[0].trim()+". Try again."; await wait(700); z.classList.remove("badz"); }
+}));
+$("#iExplore").onclick=()=>iModeSet("explore"); $("#iGame").onclick=()=>iModeSet("game");
+
+/* ================= 5. PC checker ================= */
+const PCP=[["Lab PC (example)",{g:3.2,c:4,b:"x64",r:8,d:120,s:"hdd",x:"2"}],["Older laptop (example)",{g:1.6,c:2,b:"x64",r:4,d:25,s:"hdd",x:"2"}],["32-bit PC (example)",{g:2.0,c:2,b:"x86",r:4,d:200,s:"hdd",x:"2"}],["Good laptop (example)",{g:2.8,c:8,b:"x64",r:16,d:250,s:"ssd",x:"3"}]];
+$("#pcPresets").innerHTML=PCP.map((p,i)=>`<button class="chip" data-i="${i}">${p[0]}</button>`).join("");
+$$("#pcPresets .chip").forEach(b=>b.onclick=()=>{const v=PCP[b.dataset.i][1];$("#pcGhz").value=v.g;$("#pcCores").value=v.c;$("#pcBits").value=v.b;$("#pcRam").value=v.r;$("#pcDisk").value=v.d;$("#pcSsd").value=v.s;$("#pcRes").value=v.x;pc();});
+function pc(){
+  const g=+$("#pcGhz").value,c=+$("#pcCores").value,b=$("#pcBits").value,r=+$("#pcRam").value,d=+$("#pcDisk").value,s=$("#pcSsd").value,x=+$("#pcRes").value;
+  const R=(lvl,txt)=>({lvl,txt}); const rows=[];
+  rows.push(["Processor type", b==="x86"?R(0,"32-bit: not supported"):b==="arm"?R(1,"ARM: see note"):R(2,"64-bit ✓"),"64-bit"]);
+  rows.push(["Processor speed", g<1.8?R(0,g+" GHz: too slow"):R(c>=4?2:1,g+" GHz"),"1.8 GHz+"]);
+  rows.push(["Cores", c>=4?R(2,c+" cores"):R(1,c+" cores (quad-core recommended)"),"4+ recommended"]);
+  rows.push(["RAM", r<4?R(0,r+" GB: below minimum"):r<16?R(1,r+" GB: works, may be slow"):R(2,r+" GB"),"4 GB min · 16 GB rec."]);
+  rows.push(["Free disk", d<20?R(0,d+" GB: too little for a typical install"):d<50?R(1,d+" GB: enough for .NET desktop only"):R(2,d+" GB"),"20–50 GB typical"]);
+  rows.push(["Drive", s==="ssd"?R(2,"SSD"):R(1,"HDD: works, slower"),"SSD recommended"]);
+  rows.push(["Screen", x===1?R(0,"1280 × 720: below WXGA"):x===2?R(1,"1366 × 768: minimum"):R(2,"1920 × 1080+"),"1366 × 768 min"]);
+  const pill=l=>l===2?'<span class="pill ok">Recommended</span>':l===1?'<span class="pill hi">Minimum</span>':'<span class="pill bad">Not enough</span>';
+  $("#pcBody").innerHTML=rows.map(r=>`<tr><td>${r[0]}</td><td>${pill(r[1].lvl)} <span style="font-size:.85rem">${r[1].txt}</span></td><td>${r[2]}</td></tr>`).join("")+
+    (b==="arm"?'<tr><td colspan="3" class="muted" style="font-size:.85rem">The slides say ARM is not supported. Newer Visual Studio 2022 releases (17.4 and later) do run natively on ARM64 Windows 11, so check the latest system requirements page.</td></tr>':"");
+  const worst=Math.min(...rows.map(r=>r[1].lvl));
+  $("#pcVerdict").innerHTML= worst===0?'<span style="color:var(--bad)">✗ This PC can\'t run Visual Studio 2022 well</span>':worst===1?'<span style="color:var(--hi)">~ It will run, but expect it to be slow</span>':'<span style="color:var(--ok)">✓ Ready for Visual Studio 2022</span>';
+}
+["#pcGhz","#pcCores","#pcBits","#pcRam","#pcDisk","#pcSsd","#pcRes"].forEach(s=>$(s).addEventListener("input",pc)); pc();
+
+/* ================= 6. FORM DESIGNER ================= */
+const DEF_EVT={Button:"Click",Label:"Click",TextBox:"TextChanged"};
+let F; // designer state
+function freshState(proj){ return {proj, form:{name:"Form1",text:"Form1"}, ctls:[], counters:{Button:0,Label:0,TextBox:0}, sel:null, handlers:[], built:false, errors:[], runLog:{}, nextId:1}; }
+const CHAL={
+  hello:{title:"Hello World (slides 19–29)",proj:"HelloWorld",steps:[
+    ["Add a Button to the form","Toolbox → Button",s=>s.ctls.some(c=>c.type==="Button")],
+    ['Set the button\'s Text to "Click this"',"Properties → Text",s=>s.ctls.some(c=>c.type==="Button"&&c.text==="Click this")],
+    ["Name the button btnClickThis","Properties → (Name). Do this before double-clicking.",s=>!!byName("btnClickThis","Button")],
+    ["Add a Label named lblHelloWorld","Toolbox → Label, then (Name)",s=>!!byName("lblHelloWorld","Label")],
+    ["Double-click the button to create btnClickThis_Click","Double-click it on the form, or use the ⚡ button in Properties",s=>s.handlers.some(h=>h.method==="btnClickThis_Click")],
+    ['Type lblHelloWorld.Text = "Hello World!";',"Inside the handler in Form1.cs",s=>{const r=simClick("btnClickThis");return r.ok&&r.texts.lblHelloWorld==="Hello World!";}],
+    ["Press ▶ Start to build and run","The build must have no errors",s=>s.runLog.started],
+    ["Click the button in the running form","label1 changes to Hello World!",s=>s.runLog.hello]
+  ]},
+  lab:{title:"Lab Sheet 1 · Task 1",proj:"ShowNameApp",steps:[
+    ["Add two Buttons and a Label","Toolbox",s=>s.ctls.filter(c=>c.type==="Button").length>=2&&s.ctls.some(c=>c.type==="Label")],
+    ['Button btnShowName with Text "Show Name"',"(Name) and Text",s=>{const c=byName("btnShowName","Button");return c&&c.text==="Show Name";}],
+    ['Button btnClear with Text "Clear"',"(Name) and Text",s=>{const c=byName("btnClear","Button");return c&&c.text==="Clear";}],
+    ["Label lblName","(Name)",s=>!!byName("lblName","Label")],
+    ["btnShowName_Click shows your name on lblName","lblName.Text = \"Your Name\";",s=>{const r=simClick("btnShowName");return r.ok&&byName("lblName","Label")&&(r.texts.lblName||"").trim().length>0&&r.texts.lblName!==byName("lblName","Label").text;}],
+    ["btnClear_Click deletes the name","lblName.Text = \"\";",s=>{const r=simClick("btnClear",{lblName:"Nimal"});return r.ok&&r.texts.lblName==="";}],
+    ["Run it and test both buttons","Click Show Name, then Clear",s=>s.runLog.shown&&s.runLog.cleared]
+  ]},
+  free:{title:"Free build",proj:"MyApp",steps:[
+    ["Design any form you like","Try a TextBox: lblGreeting.Text = \"Hi \" + txtName.Text;",s=>s.ctls.length>0],
+    ["Write at least one event handler","Double-click a control",s=>s.handlers.some(h=>h.body.trim())],
+    ["Run it","▶ Start",s=>s.runLog.started]
+  ]}
+};
+let chal="hello";
+function byName(n,t){ return F.ctls.find(c=>c.name===n&&(!t||c.type===t)); }
+$("#chal").innerHTML=Object.entries(CHAL).map(([k,v])=>`<button class="chip" data-k="${k}">${v.title}</button>`).join("");
+$$("#chal .chip").forEach(b=>b.onclick=()=>loadChal(b.dataset.k));
+function loadChal(k){ chal=k; F=freshState(CHAL[k].proj); $$("#chal .chip").forEach(b=>b.setAttribute("aria-pressed",b.dataset.k===k)); $("#projName").textContent=F.proj; $("#chalTitle").textContent=CHAL[k].title; showTab("design"); renderAll(); $("#errRows").innerHTML='<div class="ok" style="opacity:.7">Press Start to build.</div>'; $("#errCount").textContent=""; }
+$("#restart").onclick=()=>loadChal(chal);
+
+function addCtl(type,opts={}){
+  F.counters[type]++; const nm=type.charAt(0).toLowerCase()+type.slice(1)+F.counters[type];
+  const n=F.ctls.length; const c=Object.assign({id:F.nextId++,type,name:nm,text:type==="TextBox"?"":nm,x:24+(n%3)*140,y:24+Math.floor(n/3)*48%220},opts);
+  F.ctls.push(c); F.sel=c.id; F.built=false; renderAll(); return c;
+}
+$$("#toolbox button").forEach(b=>b.onclick=()=>{ showTab("design"); addCtl(b.dataset.t); });
+
+function renderForm(){
+  $("#formTitle").textContent=F.form.text;
+  $("#wform").classList.toggle("selected",F.sel==="form");
+  $("#client").innerHTML=F.ctls.map(c=>`<div class="ctl ${c.type}${F.sel===c.id?" sel":""}" data-id="${c.id}" style="left:${c.x}px;top:${c.y}px">${esc(c.text)||(c.type==="TextBox"?"&nbsp;":"&nbsp;")}</div>`).join("");
+  $$("#client .ctl").forEach(el=>{
+    const c=F.ctls.find(x=>x.id==el.dataset.id);
+    el.addEventListener("pointerdown",e=>{ e.stopPropagation(); if(F.sel!==c.id){F.sel=c.id;renderProps();$$("#client .ctl").forEach(x=>x.classList.toggle("sel",x===el));$("#wform").classList.remove("selected");}
+      const sx=e.clientX,sy=e.clientY,ox=c.x,oy=c.y; let moved=false; try{el.setPointerCapture(e.pointerId);}catch(_){}
+      const mv=ev=>{const dx=ev.clientX-sx,dy=ev.clientY-sy; if(Math.abs(dx)+Math.abs(dy)>3) moved=true; c.x=Math.max(0,Math.min(460-el.offsetWidth-2,ox+dx)); c.y=Math.max(0,Math.min(270-el.offsetHeight,oy+dy)); el.style.left=c.x+"px"; el.style.top=c.y+"px";};
+      const up=()=>{el.removeEventListener("pointermove",mv);el.removeEventListener("pointerup",up);el.removeEventListener("pointercancel",up);};
+      el.addEventListener("pointermove",mv); el.addEventListener("pointerup",up); el.addEventListener("pointercancel",up);
+    });
+    el.addEventListener("dblclick",e=>{e.stopPropagation();makeHandler(c);});
+  });
+}
+$("#wform").addEventListener("pointerdown",()=>{F.sel="form";renderForm();renderProps();});
+
+function renderProps(){
+  const P=$("#props");
+  if(F.sel===null){ P.innerHTML='<div class="sel-name" style="font-weight:400;opacity:.7">Select a control on the form.</div>'; return; }
+  const isForm=F.sel==="form", c=isForm?null:F.ctls.find(x=>x.id===F.sel);
+  if(!isForm&&!c){F.sel=null;return renderProps();}
+  const name=isForm?F.form.name:c.name, text=isForm?F.form.text:c.text, type=isForm?"Form":c.type;
+  P.innerHTML=`<div class="sel-name">${esc(name)} <span style="font-weight:400;opacity:.7">System.Windows.Forms.${type}</span></div>
+    <label class="pr"><span>(Name)</span><input type="text" id="pName" value="${esc(name)}" spellcheck="false" autocomplete="off"></label>
+    <label class="pr"><span>Text</span><input type="text" id="pText" value="${esc(text)}" spellcheck="false" autocomplete="off"></label>
+    <div class="perr" id="pErr"></div>
+    <div class="acts">${isForm?"":`<button class="btn small" id="pEvt">⚡ Create ${DEF_EVT[type]} event (double-click)</button><button class="btn small" id="pDel">Delete control</button>`}</div>`;
+  const applyName=()=>{
+    const v=$("#pName").value.trim(); if(v===name) return;
+    if(!/^[A-Za-z_][A-Za-z0-9_]*$/.test(v)){ $("#pErr").textContent="Property value is not valid. A name must start with a letter and contain only letters, digits and _ (no spaces)."; $("#pName").value=name; return; }
+    if(KW.has(v)){ $("#pErr").textContent=`'${v}' is a C# keyword and cannot be a name.`; $("#pName").value=name; return; }
+    if((isForm?false:F.ctls.some(x=>x!==c&&x.name===v))||(!isForm&&v===F.form.name)){ $("#pErr").textContent=`The name ${v} is already in use by another component.`; $("#pName").value=name; return; }
+    if(isForm) F.form.name=v; else { if(c.type!=="TextBox"&&c.text===c.name) {} c.name=v; }
+    F.built=false; renderAll();
+  };
+  $("#pName").addEventListener("change",applyName); $("#pName").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();applyName();}});
+  $("#pText").addEventListener("input",()=>{ const v=$("#pText").value; if(isForm) F.form.text=v; else c.text=v; renderForm(); renderCheck(); });
+  if(!isForm){ $("#pEvt").onclick=()=>makeHandler(c); $("#pDel").onclick=()=>{F.ctls=F.ctls.filter(x=>x!==c);F.sel=null;F.built=false;renderAll();}; }
+}
+function makeHandler(c){
+  const evt=DEF_EVT[c.type]; let h=F.handlers.find(x=>x.ctlId===c.id&&x.evt===evt);
+  if(!h){ h={ctlId:c.id,evt,method:`${c.name}_${evt}`,body:""}; F.handlers.push(h); }
+  F.built=false; showTab("code"); renderCode(); renderCheck();
+  const ta=$(`#codeArea textarea[data-m="${h.method}"]`); if(ta) ta.focus();
+}
+function showTab(t){ $("#tabDesign").setAttribute("aria-selected",t==="design"); $("#tabCode").setAttribute("aria-selected",t==="code"); $("#designView").hidden=t!=="design"; $("#codeView").hidden=t!=="code"; if(t==="code") renderCode(); }
+$("#tabDesign").onclick=()=>showTab("design"); $("#tabCode").onclick=()=>showTab("code");
+function renderCode(){
+  const L=(s,n)=>`<div class="ln">${hl(s)||" "}</div>`;
+  let h=["using System;","using System.Windows.Forms;","",`namespace ${F.proj}`,"{",`    public partial class ${F.form.name} : Form`,"    {",`        public ${F.form.name}()`,"        {","            InitializeComponent();","        }"].map(L).join("");
+  F.handlers.forEach((x,i)=>{
+    const c=F.ctls.find(k=>k.id===x.ctlId);
+    h+=L("")+L(`        private void ${x.method}(object sender, EventArgs e)`)+L("        {")+
+      `<textarea data-m="${x.method}" data-i="${i}" rows="${Math.max(2,x.body.split("\n").length+1)}" spellcheck="false" aria-label="Code for ${x.method}" placeholder="// type your code here">${esc(x.body)}</textarea>`+
+      (!c?`<div class="hint">// this control was deleted, so the designer no longer calls this method</div>`:(c.name+"_"+x.evt!==x.method?`<div class="hint">// note: the control is now named ${esc(c.name)}, but the method keeps its old name</div>`:""))+L("        }");
+  });
+  if(!F.handlers.length) h+=L("")+`<div class="hint">// double-click a control on the design tab to create an event handler here</div>`;
+  h+=["    }","}"].map(L).join("");
+  $("#codeArea").innerHTML=h;
+  $$("#codeArea textarea").forEach(t=>t.addEventListener("input",()=>{ F.handlers[+t.dataset.i].body=t.value; t.rows=Math.max(2,t.value.split("\n").length+1); F.built=false; renderCheck(); }));
+}
+$("#supported").innerHTML=['lblResult.Text = "Hello";','lblResult.Text = txtName.Text;','lblResult.Text = "Hi " + txtName.Text;','txtName.Clear();','txtName.Text = "";','this.Text = "New title";','MessageBox.Show("Saved!");','this.Close();'].map(s=>`<span class="ln" data-n="›">${hl(s)}</span>`).join("");
+
+/* --- mini compiler / interpreter --- */
+function splitStmts(body){
+  const noCom=body.split("\n").map(l=>{ let inS=false; for(let i=0;i<l.length;i++){ if(l[i]==='"'&&l[i-1]!=="\\") inS=!inS; if(!inS&&l[i]==="/"&&l[i+1]==="/") return l.slice(0,i);} return l; }).join("\n");
+  const out=[]; let cur="",inS=false;
+  for(let i=0;i<noCom.length;i++){ const ch=noCom[i]; if(ch==='"'&&noCom[i-1]!=="\\") inS=!inS; if(ch===";"&&!inS){ out.push({s:cur.trim(),semi:true}); cur=""; } else cur+=ch; }
+  if(cur.trim()) out.push({s:cur.trim(),semi:false});
+  return out.filter(x=>x.s.length||x.semi===false);
+}
+function ctlLookup(n){ return F.ctls.find(c=>c.name===n); }
+function nameErr(n){ const ci=F.ctls.find(c=>c.name.toLowerCase()===n.toLowerCase()); return {code:"CS0103",msg:`The name '${n}' does not exist in the current context`+(ci?`. Did you mean '${ci.name}'? C# is case-sensitive.`:"")}; }
+function parseExpr(ex){
+  const parts=[]; let cur="",inS=false;
+  for(let i=0;i<ex.length;i++){ const ch=ex[i]; if(ch==='"'&&ex[i-1]!=="\\") inS=!inS; if(ch==="+"&&!inS){parts.push(cur.trim());cur="";} else cur+=ch; }
+  parts.push(cur.trim());
+  const terms=[];
+  for(const p of parts){
+    if(!p) return {err:{code:"CS1525",msg:"Invalid expression term '+'"}};
+    let m;
+    if((m=p.match(/^"((?:[^"\\]|\\.)*)"$/))) terms.push({lit:m[1].replace(/\\n/g,"\n").replace(/\\"/g,'"').replace(/\\\\/g,"\\")});
+    else if(/^-?\d+(\.\d+)?$/.test(p)) terms.push({lit:p});
+    else if((m=p.match(/^([A-Za-z_]\w*)\.(\w+)$/))){
+      if(m[1]==="this"){ if(m[2]!=="Text") return {err:{code:"CS1061",msg:`'${F.form.name}' does not contain a definition for '${m[2]}' in this simulator`}}; terms.push({ref:"__form"}); }
+      else { const c=ctlLookup(m[1]); if(!c) return {err:nameErr(m[1])}; if(m[2]!=="Text") return {err:{code:"CS1061",msg:`'${c.type}' does not contain a definition for '${m[2]}'`+(m[2].toLowerCase()==="text"?". Use Text with a capital T.":"")}}; terms.push({ref:c.name}); }
+    }
+    else if(p.startsWith('"')) return {err:{code:"CS1010",msg:"Newline in constant: a string is missing its closing \""}};
+    else if(/^[A-Za-z_]\w*$/.test(p)) return {err:nameErr(p)};
+    else return {err:{code:"SIM",msg:`The practice IDE doesn't understand '${p}'. See "The code understands" for what works here.`}};
+  }
+  return {terms};
+}
+function compileStmt(s){
+  let m;
+  if((m=s.match(/^([A-Za-z_]\w*)\.(\w+)\s*=\s*([\s\S]+)$/))){
+    let target;
+    if(m[1]==="this"){ if(m[2]!=="Text") return {err:{code:"SIM",msg:`Only this.Text can be set on the form here.`}}; target="__form"; }
+    else { const c=ctlLookup(m[1]); if(!c) return {err:nameErr(m[1])}; if(m[2]!=="Text") return {err:{code:"CS1061",msg:`'${c.type}' does not contain a definition for '${m[2]}'`+(m[2].toLowerCase()==="text"?". Use Text with a capital T.":"")}}; target=c.name; }
+    const e=parseExpr(m[3].trim()); if(e.err) return e; return {op:"set",target,terms:e.terms};
+  }
+  if((m=s.match(/^([A-Za-z_]\w*)\.Clear\(\s*\)$/))){ const c=ctlLookup(m[1]); if(!c) return {err:nameErr(m[1])}; if(c.type!=="TextBox") return {err:{code:"CS1061",msg:`'${c.type}' does not contain a definition for 'Clear'. Use ${c.name}.Text = "";`}}; return {op:"set",target:c.name,terms:[{lit:""}]}; }
+  if((m=s.match(/^MessageBox\.Show\(([\s\S]*)\)$/))){ const e=parseExpr(m[1].trim()); if(e.err) return e; return {op:"msg",terms:e.terms}; }
+  if(/^(this\.)?Close\(\s*\)$/.test(s)||/^Application\.Exit\(\s*\)$/.test(s)) return {op:"close"};
+  if(/^[A-Za-z_]\w*$/.test(s)) return {err:{code:"CS0201",msg:"Only assignment, call, increment, decrement and new object expressions can be used as a statement"}};
+  return {err:{code:"SIM",msg:`The practice IDE doesn't understand '${s.length>40?s.slice(0,40)+"…":s}'. See "The code understands" for what works here.`}};
+}
+function compileHandler(h){
+  const errs=[], prog=[];
+  splitStmts(h.body).forEach(st=>{ if(!st.s&&st.semi) return;
+    if(!st.semi){ errs.push({code:"CS1002",msg:"; expected",where:h.method}); }
+    const r=compileStmt(st.s); if(r.err) errs.push(Object.assign({where:h.method},r.err)); else prog.push(r); });
+  return {errs,prog};
+}
+function evalTerms(terms,texts){ return terms.map(t=>t.lit!==undefined?t.lit:(t.ref==="__form"?texts.__form:texts[t.ref]??"")).join(""); }
+function exec(prog,texts,ui){ for(const p of prog){ if(p.op==="set") texts[p.target]=evalTerms(p.terms,texts); else if(p.op==="msg"){ if(ui) ui.msg(evalTerms(p.terms,texts)); } else if(p.op==="close"){ if(ui) ui.close(); return; } } }
+function simClick(ctlName,preset){
+  const c=ctlLookup(ctlName); if(!c) return {ok:false}; const h=F.handlers.find(x=>x.ctlId===c.id&&x.evt==="Click"); if(!h) return {ok:false};
+  const r=compileHandler(h); if(r.errs.length) return {ok:false};
+  const texts={__form:F.form.text}; F.ctls.forEach(k=>texts[k.name]=k.text); Object.assign(texts,preset||{}); exec(r.prog,texts,null); return {ok:true,texts};
+}
+function build(){
+  const errs=[];
+  F.handlers.forEach(h=>{ const c=F.ctls.find(k=>k.id===h.ctlId); compileHandler(h).errs.forEach(e=>errs.push(e)); });
+  F.errors=errs;
+  const rows=$("#errRows");
+  if(!errs.length){ rows.innerHTML='<div class="ok">========== Build: 1 succeeded, 0 failed ==========</div>'; $("#errCount").textContent="0 errors"; }
+  else { rows.innerHTML=errs.map((e,i)=>`<div class="er" data-m="${esc(e.where)}"><span class="x">✕</span><span class="mono">${e.code==="SIM"?"Practice":e.code}</span><span>${esc(e.msg)}</span><span class="mono" style="opacity:.7">${esc(e.where)}</span></div>`).join(""); $("#errCount").textContent=`${errs.length} error${errs.length>1?"s":""}`;
+    $$("#errRows .er").forEach(r=>r.onclick=()=>{ showTab("code"); const t=$(`#codeArea textarea[data-m="${r.dataset.m}"]`); if(t) t.focus(); }); }
+  return !errs.length;
+}
+$("#startBtn").onclick=()=>{ if(!build()){ showTab("code"); return; } F.built=true; runForm(); };
+
+function runForm(){
+  F.runLog.started=true; renderCheck();
+  const texts={__form:F.form.text}; F.ctls.forEach(c=>texts[c.name]=c.text);
+  const progs={}; F.handlers.forEach(h=>{ progs[h.ctlId+":"+h.evt]=compileHandler(h).prog; });
+  const L=$("#runLayer"); L.hidden=false; L.className="runlayer";
+  const maxX=Math.max(300,...F.ctls.map(c=>c.x+160)), maxY=Math.max(180,...F.ctls.map(c=>c.y+50));
+  L.innerHTML=`<div class="runwin" role="dialog" aria-label="Running form" style="width:min(${Math.min(460,maxX)}px,100%)"><div class="titlebar"><span id="rTitle"></span><span><button aria-label="Minimise" tabindex="-1">—</button><button id="rClose" aria-label="Close">✕</button></span></div>
+    <div class="client" id="rClient" style="height:${Math.min(272,maxY)}px"></div><div class="runhint">Running. Close the window (✕) to stop.</div></div>`;
+  const draw=()=>{
+    $("#rTitle").textContent=texts.__form;
+    F.ctls.forEach(c=>{ const el=$(`#rc${c.id}`); if(!el) return; if(c.type==="TextBox"){ if(el.value!==texts[c.name]) el.value=texts[c.name]; } else el.textContent=texts[c.name]||(c.type==="Label"?"":""); });
+    if(F.ctls.some(c=>c.name==="lblHelloWorld")&&texts.lblHelloWorld==="Hello World!") F.runLog.hello=true;
+    if(F.ctls.some(c=>c.name==="lblName")){ if((texts.lblName||"").trim()&&texts.lblName!==byName("lblName").text) F.runLog.shown=true; if(F.runLog.shown&&texts.lblName==="") F.runLog.cleared=true; }
+    renderCheck();
+  };
+  const ui={ msg:t=>{ const m=document.createElement("div"); m.className="msgbox"; m.innerHTML=`<div><div>${esc(t)}</div><button class="btn small" style="justify-self:end">OK</button></div>`; $("#rClient").appendChild(m); m.querySelector("button").onclick=()=>m.remove(); m.querySelector("button").focus(); }, close:()=>stop() };
+  $("#rClient").innerHTML=F.ctls.map(c=> c.type==="TextBox"?`<input class="ctl TextBox" id="rc${c.id}" style="left:${c.x}px;top:${c.y}px" aria-label="${esc(c.name)}">`:c.type==="Button"?`<button class="ctl Button" id="rc${c.id}" style="left:${c.x}px;top:${c.y}px"></button>`:`<div class="ctl Label" id="rc${c.id}" style="left:${c.x}px;top:${c.y}px"></div>`).join("");
+  F.ctls.forEach(c=>{ const el=$(`#rc${c.id}`);
+    if(c.type==="TextBox") el.addEventListener("input",()=>{ texts[c.name]=el.value; const p=progs[c.id+":TextChanged"]; if(p){exec(p,texts,ui);} draw(); });
+    else el.addEventListener("click",()=>{ const p=progs[c.id+":Click"]; if(p) exec(p,texts,ui); if($("#runLayer").hidden) return; draw(); }); });
+  function stop(){ L.hidden=true; L.innerHTML=""; $("#startBtn").focus(); }
+  $("#rClose").onclick=stop;
+  L.onkeydown=e=>{ if(e.key==="Escape") stop(); };
+  draw(); const first=$("#rClient button, #rClient input"); if(first) first.focus();
+}
+
+function renderCheck(){
+  const steps=CHAL[chal].steps; let firstOpen=-1;
+  const res=steps.map(s=>{ try{return !!s[2](F);}catch(e){return false;} });
+  res.forEach((d,i)=>{ if(!d&&firstOpen<0) firstOpen=i; });
+  $("#checklist").innerHTML=steps.map((s,i)=>`<li class="${res[i]?"done":""}${i===firstOpen?" next":""}"><span class="bx">${res[i]?"✓":""}</span><span>${esc(s[0])}<small>${esc(s[1])}</small></span></li>`).join("");
+  let extra="";
+  if(chal==="hello"&&F.handlers.some(h=>/^button\d+_Click$/.test(h.method))) extra='<div class="msg bad" style="margin-top:8px">You double-clicked before renaming, so the handler is called button1_Click. Delete the control, add a new one, rename it first, then double-click.</div>';
+  $("#doneBanner").innerHTML= firstOpen<0?'<div class="done-banner">All steps done. Well done!</div>':extra;
+}
+function renderAll(){ renderForm(); renderProps(); if(!$("#codeView").hidden) renderCode(); renderCheck(); }
+
+$("#solve").onclick=()=>{
+  F=freshState(CHAL[chal].proj);
+  if(chal==="hello"){ const b=addCtl("Button",{name:"btnClickThis",text:"Click this",x:40,y:40}); addCtl("Label",{name:"lblHelloWorld",text:"label1",x:40,y:90}); F.handlers.push({ctlId:b.id,evt:"Click",method:"btnClickThis_Click",body:'lblHelloWorld.Text = "Hello World!";'}); }
+  else if(chal==="lab"){ F.form.text="Show Name"; const a=addCtl("Button",{name:"btnShowName",text:"Show Name",x:40,y:40}); const c=addCtl("Button",{name:"btnClear",text:"Clear",x:170,y:40}); addCtl("Label",{name:"lblName",text:"",x:40,y:100});
+    F.handlers.push({ctlId:a.id,evt:"Click",method:"btnShowName_Click",body:'lblName.Text = "Your Name";'},{ctlId:c.id,evt:"Click",method:"btnClear_Click",body:'lblName.Text = "";'}); }
+  else { F.form.text="Greeter"; addCtl("Label",{name:"lblPrompt",text:"Your name:",x:30,y:30}); const t=addCtl("TextBox",{name:"txtName",text:"",x:120,y:28}); const b=addCtl("Button",{name:"btnGreet",text:"Greet",x:120,y:70}); addCtl("Label",{name:"lblGreeting",text:"",x:30,y:120}); const x=addCtl("Button",{name:"btnExit",text:"Exit",x:220,y:70});
+    F.handlers.push({ctlId:b.id,evt:"Click",method:"btnGreet_Click",body:'lblGreeting.Text = "Hello, " + txtName.Text + "!";'},{ctlId:x.id,evt:"Click",method:"btnExit_Click",body:"this.Close();"}); }
+  F.sel=null; F.counters={Button:3,Label:3,TextBox:3}; showTab("code"); renderAll();
+};
+loadChal("hello");
+
+/* ================= 7. prefix game ================= */
+const PFX={Form:["frm"],Button:["btn"],Label:["lbl"],TextBox:["txt"],RadioButton:["rdo","rb","rad"],CheckBox:["cb","chk"],ListBox:["lst","lb"],ComboBox:["cmb","cbo"]};
+function checkName(type,name){
+  name=name.trim(); if(!name) return {ok:false,msg:"Type a name first."};
+  if(!/^[A-Za-z_][A-Za-z0-9_]*$/.test(name)) return {ok:false,msg:"Names can only use letters, digits and _, with no spaces, and must start with a letter."};
+  const m=name.match(/^([a-z]+)(.*)$/); const P=PFX[type];
+  if(!m) return {ok:false,msg:`Start with the lowercase prefix ${P[0]}.`};
+  const pre=P.find(p=>m[1].startsWith(p)&&/^[A-Z]/.test(name.slice(p.length)));
+  if(!pre){ return {ok:false,msg:`A ${type} name should start with ${P.map(p=>"<code>"+p+"</code>").join(" or ")}, followed by a capital letter, e.g. <code>${P[0]}Something</code>.`}; }
+  const rest=name.slice(pre.length);
+  if(rest.length<2||/^\d+$/.test(rest.replace(/^[A-Z]/,""))&&rest.length<3||/^(Button|Label|TextBox|Form|Text|Box|Name)\d*$/.test(rest)) return {ok:false,msg:"Good prefix, but the second part should say what it is <b>for</b>, such as Save, Total or FirstName."};
+  return {ok:true,msg:`Good: <code>${pre}</code> says it's a ${type}, <code>${esc(rest)}</code> says what it's for.`};
+}
+const PQ=[["Button","that saves a student record","btnSave"],["TextBox","where the user types their first name","txtFirstName"],["Label","that shows the final total","lblTotal"],["Form","for a calculator app","frmCalculator"],["RadioButton","for choosing Female","rdoFemale"],["CheckBox","to receive e-mail updates","cbEmail"],["ComboBox","to pick a course","cmbCourse"],["ListBox","that lists bill items","lstBill"],["Button","that clears the form","btnClear"],["TextBox","for the unit price","txtUnitPrice"]];
+let pI=0,pS=0,pDone=false;
+function pShow(){ pDone=false; $("#pRound").textContent=`Round ${pI+1} of ${PQ.length}`; $("#pScore").textContent=`${pS} correct`; const q=PQ[pI]; $("#pQ").innerHTML=`Name a <span style="color:var(--accent)">${q[0]}</span> ${esc(q[1])}`; $("#pIn").value=""; $("#pFb").innerHTML=""; $("#pNext").hidden=true; $("#pAgain").hidden=true; }
+function pCheck(){ if(pDone) return; const q=PQ[pI]; const r=checkName(q[0],$("#pIn").value); if(!$("#pIn").value.trim()) return; pDone=true; if(r.ok) pS++;
+  $("#pFb").innerHTML=`<div class="msg ${r.ok?"ok":"bad"}">${r.ok?"✓ ":"✗ "}${r.msg}${r.ok?"":` Suggested: <code>${q[2]}</code>`}</div>`; $("#pScore").textContent=`${pS} correct`;
+  if(pI<PQ.length-1) $("#pNext").hidden=false; else { $("#pAgain").hidden=false; $("#pRound").textContent=`Finished: ${pS} of ${PQ.length}`; } }
+$("#pCheck").onclick=pCheck; $("#pIn").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); pDone&&!$("#pNext").hidden?($("#pNext").click()):pCheck(); } });
+$("#pNext").onclick=()=>{pI++;pShow();$("#pIn").focus();}; $("#pAgain").onclick=()=>{pI=0;pS=0;pShow();}; pShow();
+
+/* ================= 8. lab forms ================= */
+const FORMS={
+  calc:{title:"Small calculator",w:330,h:205,cap:"Calculator",items:[
+    ["Label","Number 1",22,20,0,0,"lblNumber1"],["TextBox","87",130,17,120,22,"txtNumber1"],
+    ["Label","Number 2",22,58,0,0,"lblNumber2"],["TextBox","78",130,55,120,22,"txtNumber2"],
+    ["Label","Result",22,96,0,0,"lblResultCaption"],["Label","165",130,93,120,24,"lblResult","Result"],
+    ["Button","/",18,136,46,28,"btnDivide"],["Button","x",66,136,46,28,"btnMultiply"],["Button","-",114,136,46,28,"btnSubtract"],["Button","+",162,136,46,28,"btnAdd"],["Button","Clear",210,136,54,28,"btnClear"],["Button","Exit",266,136,50,28,"btnExit"]],form:"frmCalculator"},
+  reg:{title:"Registration form",w:540,h:300,cap:"Registration",items:[
+    ["Label","First Name",18,36,0,0,"lblFirstName"],["TextBox","",140,30,130,26,"txtFirstName"],
+    ["Label","Last Name",18,80,0,0,"lblLastName"],["TextBox","",140,74,130,26,"txtLastName"],
+    ["Label","Gender",18,130,0,0,"lblGender"],["RadioButton","Male",140,130,0,0,"rdoMale"],["RadioButton","Female",210,130,0,0,"rdoFemale"],
+    ["Label","Course",18,178,0,0,"lblCourse"],["ComboBox","",140,174,130,22,"cmbCourse"],
+    ["ListBox","",320,30,200,200,"lstDetails"],
+    ["Button","Register",60,226,72,30,"btnRegister"],["Button","Clear",148,226,64,30,"btnClear"]],form:"frmRegistration"},
+  bill:{title:"Shop bill",w:560,h:290,cap:"Form1",navy:true,items:[
+    ["Label","Item Name",14,26,0,0,"lblItemName"],["TextBox","Dhal",110,22,120,28,"txtItemName"],
+    ["Label","Unit Price",14,80,0,0,"lblUnitPrice"],["TextBox","60.00",110,74,120,28,"txtUnitPrice"],
+    ["Label","Quantity",14,134,0,0,"lblQuantity"],["TextBox","5",110,130,120,28,"txtQuantity"],
+    ["Button","Enter",110,176,70,22,"btnEnter"],
+    ["Label","Total",14,232,0,0,"lblTotalCaption"],["Label","Rs300.00",110,232,0,0,"lblTotal"],
+    ["ListBox","Item Name   Unit Price Qty    Sub Total\nDhal          60 x 5  =     Rs300.00",260,22,284,240,"lstBill"]],form:"frmBill"}
+};
+let exK="calc", exNames={calc:{},reg:{},bill:{}}, exSel=null;
+$("#exTabs").innerHTML=Object.entries(FORMS).map(([k,v])=>`<button class="chip" data-k="${k}">${v.title}</button>`).join("");
+$$("#exTabs .chip").forEach(b=>b.onclick=()=>{exK=b.dataset.k;exSel=null;renderEx();});
+function itemType(i){ return i===-1?"Form":FORMS[exK].items[i][0]; }
+function itemDesc(i){ if(i===-1) return "the Form itself"; const it=FORMS[exK].items[i]; return `${it[0]}${it[1]?` showing “${it[1].split("\n")[0]}”`:""}`; }
+function renderEx(){
+  const f=FORMS[exK]; $$("#exTabs .chip").forEach(b=>b.setAttribute("aria-pressed",b.dataset.k===exK)); const N=exNames[exK];
+  $("#exMock").innerHTML=`<div class="mock${f.navy?" navy":""}" style="width:${f.w}px;height:${f.h+26}px"><div class="titlebar${exSel===-1?" sel":""}" data-i="-1" style="color:var(--win-ink)"><span>${f.cap}</span><span>— ▢ ✕</span></div>${f.items.map((it,i)=>{
+    const [t,txt,x,y,w,h]=it; const cls=`m ${t}${it[7]?" "+it[7]:""}${exSel===i?" sel":""}${N[i]?" named":""}`;
+    const style=`left:${x}px;top:${y+26}px;${w?`width:${w}px;`:""}${h?`height:${h}px;`:""}`;
+    const inner= t==="RadioButton"?`<span class="dot"></span>${esc(txt)}`: t==="ListBox"?`<span style="white-space:pre;font-family:var(--f-mono);font-size:.68rem;line-height:1.6">${esc(txt)}</span>`:esc(txt);
+    return `<div class="${cls}" data-i="${i}" style="${style}" role="button" tabindex="0" aria-label="${esc(itemDesc(i))}">${inner}</div>`;}).join("")}</div>`;
+  $$("#exMock [data-i]").forEach(el=>{ const pick=()=>{exSel=+el.dataset.i;renderEx();$("#exIn").focus();}; el.onclick=pick; el.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();pick();}}; });
+  const total=f.items.length+1, done=Object.keys(N).length;
+  $("#exScore").textContent=`${done} / ${total} named`;
+  if(exSel===null){ $("#exSel").textContent="Click a control (or the title bar)"; $("#exIn").disabled=true; $("#exSet").disabled=true; $("#exIn").value=""; }
+  else { $("#exSel").innerHTML=`${esc(itemDesc(exSel))} <span class="pill hi">${itemType(exSel)}</span>`; $("#exIn").disabled=false; $("#exSet").disabled=false; $("#exIn").value=N[exSel]||""; }
+  $("#exList").innerHTML=[-1,...f.items.map((_,i)=>i)].map(i=>`<div><span>${esc(itemDesc(i))}</span>${N[i]?`<code>${esc(N[i])}</code>`:'<span class="muted">—</span>'}</div>`).join("");
+  $("#exFb").innerHTML= done===total?'<div class="msg ok">Every object is named. Build this form in Visual Studio next.</div>':"";
+}
+function exSetName(){
+  if(exSel===null) return; const v=$("#exIn").value.trim(); const r=checkName(itemType(exSel),v);
+  const N=exNames[exK]; const dup=Object.entries(N).find(([i,n])=>+i!==exSel&&n===v);
+  if(r.ok&&dup){ $("#exFb").innerHTML=`<div class="msg bad">✗ ${esc(v)} is already used on this form. Every name must be unique.</div>`; return; }
+  if(!r.ok){ $("#exFb").innerHTML=`<div class="msg bad">✗ ${r.msg}</div>`; return; }
+  N[exSel]=v; const order=[-1,...FORMS[exK].items.map((_,i)=>i)]; const nxt=order.find(i=>!N[i]); exSel= nxt===undefined?null:nxt; renderEx(); if(exSel!==null) $("#exIn").focus();
+  if(Object.keys(N).length<FORMS[exK].items.length+1) $("#exFb").innerHTML=`<div class="msg ok">${r.msg}</div>`;
+}
+$("#exSet").onclick=exSetName; $("#exIn").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();exSetName();}});
+$("#exShow").onclick=()=>{ const f=FORMS[exK]; const N=exNames[exK]; N[-1]=f.form; f.items.forEach((it,i)=>N[i]=it[6]); exSel=null; renderEx(); };
+$("#exReset").onclick=()=>{ exNames[exK]={}; exSel=null; renderEx(); };
+renderEx();
+
+/* ================= 9. quiz ================= */
+const QZ=[
+  ["A computer program in its human-readable form is called…",["Machine code","Source code","An assembly","CIL"],1,"Source code is what you write. It must be translated before the computer can run it."],
+  ["Which translator converts the whole program before it runs?",["Interpreter","Compiler","CLR","Toolbox"],1,"A compiler translates everything first and produces a file such as an .exe."],
+  ["SQL and HTML are examples of which style of language?",["Imperative","Declarative","Machine","Assembly"],1,"They describe what you want, not the steps to get it."],
+  ["C# code is first compiled into…",["Machine code","CIL (Common Intermediate Language)","Java bytecode","HTML"],1,"The C# compiler produces CIL, stored in an assembly."],
+  ["What turns CIL into machine code when the app runs?",["The JIT compiler inside the CLR","Solution Explorer","The Toolbox","Windows Update"],0,"The just-in-time compiler is part of the Common Language Runtime."],
+  ["Compiled .NET code is stored in assemblies with which extensions?",[".cs or .vb",".exe or .dll",".sln or .csproj",".txt or .doc"],1,".cs is source code; .exe and .dll are assemblies."],
+  ["Which Visual Studio window lets you change a button's Text?",["Solution Explorer","Output","Properties","Toolbox"],2,"Properties (F4) shows the selected control's properties."],
+  ["Which template creates this week's Hello World project?",["Console App","Windows Forms App (.NET Framework)","ASP.NET Web App","Class Library"],1,"Choose the C# Windows Forms App (.NET Framework) template."],
+  ["What is the minimum RAM for Visual Studio 2022 (from the slides)?",["2 GB","4 GB","8 GB","16 GB"],1,"4 GB minimum; 16 GB recommended for typical professional work."],
+  ["You double-click a button before renaming it. What is the handler called?",["btnClickThis_Click","button1_Click","Click_button1","Form1_Load"],1,"The handler takes the control's name at the moment you double-click. Rename first."]
+];
+let ans={};
+function renderQuiz(){ ans={};
+  $("#quizBox").innerHTML=QZ.map((q,i)=>`<div class="card q"><div><span class="eyebrow">Q${i+1}</span><div style="font-weight:700;margin-top:2px">${esc(q[0])}</div></div><div class="opts">${q[1].map((o,j)=>`<button class="opt" data-q="${i}" data-o="${j}">${esc(o)}</button>`).join("")}</div><div class="why" id="why${i}"></div></div>`).join("");
+  $$("#quizBox .opt").forEach(b=>b.onclick=()=>{ const qi=+b.dataset.q,oi=+b.dataset.o; if(ans[qi]!==undefined) return; ans[qi]=oi; const r=QZ[qi][2];
+    $$(`#quizBox .opt[data-q="${qi}"]`).forEach(x=>{x.disabled=true;const j=+x.dataset.o;if(j===r)x.classList.add("right");else if(j===oi)x.classList.add("wrong");});
+    $("#why"+qi).innerHTML=(oi===r?'<span class="pill ok">Correct</span> ':'<span class="pill bad">Not quite</span> ')+esc(QZ[qi][3]); qScore(); });
+  qScore(); }
+function qScore(){ const n=Object.keys(ans).length,s=Object.entries(ans).filter(([q,o])=>QZ[q][2]===o).length; $("#qScore").textContent=`${s} / ${QZ.length}`; $("#qMsg").textContent=n<QZ.length?`${QZ.length-n} left to answer.`:s>=8?"Excellent. You're ready for Week 2.":s>=5?"Good. Revisit the stops you missed.":"Go back through the stops and try again."; }
+$("#qReset").onclick=renderQuiz; renderQuiz();
+
+/* ================= start ================= */
+const fromHash=()=>stops.findIndex(s=>s.id===(location.hash||"").slice(1));
+window.addEventListener("hashchange",()=>{const i=fromHash(); if(i>=0&&i!==cur) go(i);});
+go(Math.max(0,fromHash()));
+})();
+</script>
+
+</body></html>
